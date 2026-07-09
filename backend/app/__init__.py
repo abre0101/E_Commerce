@@ -24,6 +24,7 @@ def create_app():
     from app.routes.messages import messages_bp
     from app.routes.categories import categories_bp
     from app.routes.seed import seed_bp
+    from app.routes.health import health_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(products_bp, url_prefix="/api/products")
@@ -33,5 +34,6 @@ def create_app():
     app.register_blueprint(messages_bp, url_prefix="/api/messages")
     app.register_blueprint(categories_bp, url_prefix="/api/categories")
     app.register_blueprint(seed_bp, url_prefix="/api/seed")
+    app.register_blueprint(health_bp, url_prefix="/api/health")
 
     return app
