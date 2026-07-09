@@ -8,3 +8,4 @@ python-dotenv==1.0.1
 Pillow>=10.4.0
 cloudinary==1.40.0
 marshmallow==3.21.3
+gunicorn==22.0.0
