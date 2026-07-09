@@ -23,6 +23,7 @@ def create_app():
     from app.routes.orders import orders_bp
     from app.routes.messages import messages_bp
     from app.routes.categories import categories_bp
+    from app.routes.seed import seed_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(products_bp, url_prefix="/api/products")
@@ -31,5 +32,6 @@ def create_app():
     app.register_blueprint(orders_bp, url_prefix="/api/orders")
     app.register_blueprint(messages_bp, url_prefix="/api/messages")
     app.register_blueprint(categories_bp, url_prefix="/api/categories")
+    app.register_blueprint(seed_bp, url_prefix="/api/seed")
 
     return app
