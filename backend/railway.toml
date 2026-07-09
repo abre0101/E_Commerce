@@ -1,0 +1,7 @@
+[build]
+builder = "RAILPACK"
+
+[deploy]
+startCommand = "gunicorn run:app"
+healthcheckPath = "/api/products"
+restartPolicyType = "on_failure"
