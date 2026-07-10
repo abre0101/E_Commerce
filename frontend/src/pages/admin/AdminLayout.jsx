@@ -228,22 +228,6 @@ export default function AdminLayout() {
 
       {/* ── Footer ── */}
       <div style={{ borderTop: "1px solid #e5e7eb", padding: "8px 8px" }}>
-        <Link
-          to="/"
-          className="flex items-center rounded-lg text-sm transition-all mb-0.5"
-          style={{
-            padding: (collapsed && !isMobile) ? "8px 0" : "8px 12px",
-            justifyContent: (collapsed && !isMobile) ? "center" : "flex-start",
-            gap: 10,
-            color: IDLE_TEXT,
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = "#f3f4f6"; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
-        >
-          <span style={{ color: IDLE_ICON, flexShrink: 0 }}><Icon d={I.home} /></span>
-          {(!collapsed || isMobile) && <span className="font-medium">View Store</span>}
-        </Link>
-
         {/* User chip */}
         <div
           className="flex items-center rounded-lg mt-1"
