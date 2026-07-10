@@ -88,24 +88,18 @@ export default function Navbar() {
       </div>
 
       {/* Main nav */}
-      <nav className={`transition-all duration-300 ${
-        scrolled
-          ? "backdrop-blur-xl shadow-sm border-b"
-          : "border-b"
-      }`} style={{
-        background: scrolled
-          ? "rgba(72,40,60,0.97)"
-          : "linear-gradient(135deg, #4a2840 0%, #6b3a52 40%, #7a4a3a 75%, #5c3828 100%)",
-        borderColor: "rgba(201,169,97,0.2)"
+      <nav className={`transition-all duration-300 ${scrolled ? "shadow-md border-b" : "border-b"}`} style={{
+        background: "#7B2D5E",
+        borderColor: "rgba(201,169,97,0.35)"
       }}>
         <div className="max-w-6xl mx-auto px-6 h-[68px] flex items-center justify-between">
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-1 shrink-0 group">
-            <span className="font-serif font-bold text-2xl tracking-tight transition-colors" style={{ color: "#8B4F6D", marginRight: "2px" }}>
+            <span className="font-serif font-bold text-2xl tracking-tight transition-colors" style={{ color: "#ffffff", marginRight: "2px" }}>
               Yada
             </span>
-            <span className="font-serif font-bold text-2xl tracking-tight" style={{ color: "#C9A961" }}>Hair</span>
+            <span className="font-serif font-bold text-2xl tracking-tight" style={{ color: "#F5C842" }}>Hair</span>
           </Link>
 
           {/* Desktop links */}
@@ -117,13 +111,13 @@ export default function Navbar() {
                   {n.scrollTo ? (
                     <a href="#contact" onClick={handleContact}
                       className="relative px-4 py-2 text-sm font-medium transition-colors rounded-xl cursor-pointer" style={{
-                        color: "#c9b89a",
+                        color: "#ffffff",
                         backgroundColor: "transparent"
                       }} onMouseEnter={(e) => {
-                        e.currentTarget.style.color = "#C9A961";
-                        e.currentTarget.style.backgroundColor = "rgba(201,169,97,0.1)";
+                        e.currentTarget.style.color = "#F5C842";
+                        e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.12)";
                       }} onMouseLeave={(e) => {
-                        e.currentTarget.style.color = "#c9b89a";
+                        e.currentTarget.style.color = "#ffffff";
                         e.currentTarget.style.backgroundColor = "transparent";
                       }}>
                       {n.label}
@@ -132,17 +126,17 @@ export default function Navbar() {
                     <Link to={n.to}
                       className={`relative px-4 py-2 text-sm font-medium rounded-xl transition-all`}
                       style={{
-                        color: isActive ? "#C9A961" : "#c9b89a",
-                        backgroundColor: isActive ? "rgba(201,169,97,0.12)" : "transparent",
+                        color: isActive ? "#F5C842" : "#ffffff",
+                        backgroundColor: isActive ? "rgba(255,255,255,0.15)" : "transparent",
                         fontWeight: isActive ? "600" : "500"
                       }} onMouseEnter={(e) => {
                         if (!isActive) {
-                          e.currentTarget.style.color = "#C9A961";
-                          e.currentTarget.style.backgroundColor = "rgba(201,169,97,0.1)";
+                          e.currentTarget.style.color = "#F5C842";
+                          e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.12)";
                         }
                       }} onMouseLeave={(e) => {
                         if (!isActive) {
-                          e.currentTarget.style.color = "#c9b89a";
+                          e.currentTarget.style.color = "#ffffff";
                           e.currentTarget.style.backgroundColor = "transparent";
                         }
                       }}>
@@ -159,11 +153,11 @@ export default function Navbar() {
             {/* Cart */}
             <Link to="/cart" aria-label="Cart"
               className="relative p-2.5 rounded-xl transition-all"
-              style={{ color: "#c9b89a" }} onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#C9A961";
-                e.currentTarget.style.backgroundColor = "rgba(201,169,97,0.1)";
+              style={{ color: "#ffffff" }} onMouseEnter={(e) => {
+                e.currentTarget.style.color = "#F5C842";
+                e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.12)";
               }} onMouseLeave={(e) => {
-                e.currentTarget.style.color = "#c9b89a";
+                e.currentTarget.style.color = "#ffffff";
                 e.currentTarget.style.backgroundColor = "transparent";
               }}>
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
@@ -229,13 +223,13 @@ export default function Navbar() {
             ) : (
               <div className="hidden md:flex items-center gap-2">
                 <Link to="/login" className="text-sm font-medium px-4 py-2 rounded-xl transition-all" 
-                  style={{ color: "#c9b89a", backgroundColor: "transparent" }}
+                  style={{ color: "#ffffff", backgroundColor: "transparent" }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "#C9A961";
-                    e.currentTarget.style.backgroundColor = "rgba(201,169,97,0.1)";
+                    e.currentTarget.style.color = "#F5C842";
+                    e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.12)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.color = "#c9b89a";
+                    e.currentTarget.style.color = "#ffffff";
                     e.currentTarget.style.backgroundColor = "transparent";
                   }}>
                   Sign In
@@ -248,11 +242,11 @@ export default function Navbar() {
 
             {/* Hamburger */}
             <button className="md:hidden p-2.5 rounded-xl transition-all"
-              style={{ color: "#e8d5b0" }} onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#C9A961";
-                e.currentTarget.style.backgroundColor = "rgba(201,169,97,0.1)";
+              style={{ color: "#ffffff" }} onMouseEnter={(e) => {
+                e.currentTarget.style.color = "#F5C842";
+                e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.12)";
               }} onMouseLeave={(e) => {
-                e.currentTarget.style.color = "#e8d5b0";
+                e.currentTarget.style.color = "#ffffff";
                 e.currentTarget.style.backgroundColor = "transparent";
               }}
               onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
@@ -268,17 +262,17 @@ export default function Navbar() {
 
       {/* Mobile drawer */}
       {menuOpen && (
-        <div className="md:hidden border-b shadow-float animate-slide-up" style={{ background: "linear-gradient(135deg, #4a2840 0%, #6b3a52 60%, #5c3828 100%)", borderColor: "rgba(201,169,97,0.2)" }}>
+        <div className="md:hidden border-b shadow-float animate-slide-up" style={{ background: "#7B2D5E", borderColor: "rgba(201,169,97,0.35)" }}>
           <div className="max-w-6xl mx-auto px-6 py-5 space-y-1">
             {NAV_LINKS.map((n) =>
               n.scrollTo ? (
                 <a key={n.label} href="#contact" onClick={handleContact}
                   className="block py-3 px-4 text-sm font-medium rounded-xl transition-all"
-                  style={{ color: "#e8d5b0", backgroundColor: "transparent" }} onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "#C9A961";
-                    e.currentTarget.style.backgroundColor = "rgba(201,169,97,0.12)";
+                  style={{ color: "#ffffff", backgroundColor: "transparent" }} onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#F5C842";
+                    e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.12)";
                   }} onMouseLeave={(e) => {
-                    e.currentTarget.style.color = "#e8d5b0";
+                    e.currentTarget.style.color = "#ffffff";
                     e.currentTarget.style.backgroundColor = "transparent";
                   }}>
                   {n.label}
@@ -287,17 +281,17 @@ export default function Navbar() {
                 <Link key={n.label} to={n.to} onClick={() => setMenuOpen(false)}
                   className={`block py-3 px-4 text-sm font-medium rounded-xl transition-all`}
                   style={{
-                    color: location.pathname === n.to ? "#C9A961" : "#e8d5b0",
-                    backgroundColor: location.pathname === n.to ? "rgba(201,169,97,0.15)" : "transparent",
+                    color: location.pathname === n.to ? "#F5C842" : "#ffffff",
+                    backgroundColor: location.pathname === n.to ? "rgba(255,255,255,0.15)" : "transparent",
                     fontWeight: location.pathname === n.to ? "600" : "500"
                   }} onMouseEnter={(e) => {
                     if (location.pathname !== n.to) {
-                      e.currentTarget.style.color = "#C9A961";
-                      e.currentTarget.style.backgroundColor = "rgba(201,169,97,0.12)";
+                      e.currentTarget.style.color = "#F5C842";
+                      e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.12)";
                     }
                   }} onMouseLeave={(e) => {
                     if (location.pathname !== n.to) {
-                      e.currentTarget.style.color = "#e8d5b0";
+                      e.currentTarget.style.color = "#ffffff";
                       e.currentTarget.style.backgroundColor = "transparent";
                     }
                   }}>
@@ -312,7 +306,7 @@ export default function Navbar() {
                     <div className="w-8 h-8 rounded-lg text-white flex items-center justify-center text-xs font-bold" style={{ background: "#8B4F6D" }}>
                       {user.name[0].toUpperCase()}
                     </div>
-                    <span className="text-sm font-medium" style={{ color: "#e8d5b0" }}>{user.name}</span>
+                    <span className="text-sm font-medium" style={{ color: "#ffffff" }}>{user.name}</span>
                   </div>
                   <button onClick={() => { handleLogout(); setMenuOpen(false); }}
                     className="text-xs font-semibold" style={{ color: "#fca5a5" }}>

@@ -31,10 +31,10 @@
     @apply inline-flex items-center justify-center gap-2
            font-semibold text-sm px-7 py-3.5 rounded-2xl
            transition-all duration-200 active:scale-[0.97] disabled:opacity-50;
-    border: 2px solid #8B4F6D;
-    color: #8B4F6D;
+    border: 2px solid #7B2D5E;
+    color: #7B2D5E;
   }
-  .btn-outline:hover { background-color: #8B4F6D; color: #F7F3F0; }
+  .btn-outline:hover { background-color: #7B2D5E; color: #ffffff; }
 
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2
