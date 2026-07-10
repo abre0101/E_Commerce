@@ -28,7 +28,7 @@ export default function AdminLogin() {
       {/* Left panel */}
       <div className="hidden lg:flex lg:w-5/12 flex-col justify-between p-12 relative overflow-hidden"
         style={{
-          backgroundImage: "url('/asset/login.jfif')",
+          backgroundImage: "url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=900&auto=format&fit=crop&q=80')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}>
