@@ -26,13 +26,19 @@ export default function AdminLogin() {
     <div className="min-h-screen flex" style={{ background: "#f3f4f6" }}>
 
       {/* Left panel */}
-      <div className="hidden lg:flex lg:w-5/12 flex-col justify-between p-12"
-        style={{ background: "linear-gradient(135deg,#15803d 0%,#16a34a 60%,#22c55e 100%)" }}>
-        <div className="flex items-center gap-2">
+      <div className="hidden lg:flex lg:w-5/12 flex-col justify-between p-12 relative overflow-hidden"
+        style={{
+          backgroundImage: "url('/asset/login.jfif')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}>
+        {/* dark overlay so text stays readable */}
+        <div className="absolute inset-0" style={{ background: "rgba(0,0,0,0.45)" }} />
+        <div className="relative z-10 flex items-center gap-2">
           <span className="font-serif font-bold text-2xl text-white">Yada</span>
           <span className="font-serif font-bold text-2xl" style={{ color: "rgba(255,255,255,0.7)" }}>Hair</span>
         </div>
-        <div>
+        <div className="relative z-10">
           <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center mb-6">
             <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -45,7 +51,7 @@ export default function AdminLogin() {
             View orders, manage your product catalog, and track your store performance — all in one place.
           </p>
         </div>
-        <div className="space-y-3">
+        <div className="relative z-10 space-y-3">
           {["Orders & fulfillment", "Product catalog", "Customer insights"].map((item) => (
             <div key={item} className="flex items-center gap-3">
               <div className="w-5 h-5 rounded-full bg-white/25 flex items-center justify-center shrink-0">
