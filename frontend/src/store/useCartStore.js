@@ -1,42 +1,33 @@
 import { create } from "zustand";
 
 const useCartStore = create((set, get) => ({
-  items: JSON.parse(localStorage.getItem("cart") || "[]"),
+  items: [],
 
-  addItem: (product, qty = 1) => {
-    const items = get().items;
-    const existing = items.find((i) => i.id === product.id);
-    let updated;
-    if (existing) {
-      updated = items.map((i) =>
-        i.id === product.id ? { ...i, qty: i.qty + qty } : i
-      );
-    } else {
-      updated = [...items, { ...product, qty }];
-    }
-    localStorage.setItem("cart", JSON.stringify(updated));
-    set({ items: updated });
+  addItem(product, length) {
+    const key = `${product.id}-${length}`;
+    set((s) => {
+      const existing = s.items.find((i) => i.key === key);
+      if (existing) {
+        return { items: s.items.map((i) => i.key === key ? { ...i, qty: i.qty + 1 } : i) };
+      }
+      return { items: [...s.items, { key, product, length, qty: 1 }] };
+    });
   },
 
-  removeItem: (id) => {
-    const updated = get().items.filter((i) => i.id !== id);
-    localStorage.setItem("cart", JSON.stringify(updated));
-    set({ items: updated });
+  removeItem(key) {
+    set((s) => ({ items: s.items.filter((i) => i.key !== key) }));
   },
 
-  updateQty: (id, qty) => {
-    const updated = get().items.map((i) => (i.id === id ? { ...i, qty } : i));
-    localStorage.setItem("cart", JSON.stringify(updated));
-    set({ items: updated });
+  updateQty(key, qty) {
+    if (qty < 1) return;
+    set((s) => ({ items: s.items.map((i) => i.key === key ? { ...i, qty } : i) }));
   },
 
-  clear: () => {
-    localStorage.removeItem("cart");
-    set({ items: [] });
-  },
+  clearCart() { set({ items: [] }); },
 
-  total: () => get().items.reduce((sum, i) => sum + i.price * i.qty, 0),
-  count: () => get().items.reduce((sum, i) => sum + i.qty, 0),
+  count() { return get().items.reduce((n, i) => n + i.qty, 0); },
+
+  total() { return get().items.reduce((s, i) => s + i.product.price * i.qty, 0); },
 }));
 
 export default useCartStore;

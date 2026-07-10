@@ -1,71 +1,42 @@
 import { Link } from "react-router-dom";
-import { IconHeart, IconMapPin } from "./Icons";
-import useAuthStore from "../store/useAuthStore";
-import api from "../services/api";
-import toast from "react-hot-toast";
 
-export default function ProductCard({ product, onWishlistChange }) {
-  const { user } = useAuthStore();
-  const inWishlist = user?.wishlist?.includes(product.id);
-
-  const toggleWishlist = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!user) { toast.error("Login to save items"); return; }
-    try {
-      await api.post(`/auth/wishlist/${product.id}`);
-      if (onWishlistChange) onWishlistChange();
-    } catch {
-      toast.error("Failed");
-    }
-  };
-
+export default function ProductCard({ product }) {
   return (
-    <Link
-      to={`/products/${product.id}`}
-      className="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 flex flex-col"
-    >
-      {/* Image */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+    <Link to={`/products/${product.id}`}
+      className="group block bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1">
+      <div className="relative overflow-hidden aspect-[3/4] bg-sand-100">
         <img
-          src={product.images?.[0] || "https://placehold.co/300x225?text=No+Image"}
-          alt={product.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          loading="lazy"
+          src={product.images[0]}
+          alt={product.name}
+          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
         />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-        {/* Wishlist button */}
-        <button
-          onClick={toggleWishlist}
-          className={`absolute top-2.5 right-2.5 w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-all duration-150 active:scale-90
-            ${inWishlist ? "bg-red-500 text-white" : "bg-white/90 hover:bg-white text-gray-500 hover:text-red-400"}`}
-          aria-label={inWishlist ? "Remove from wishlist" : "Save"}
-        >
-          {inWishlist ? <IconHeart filled size={13} /> : <IconHeart size={13} />}
-        </button>
+        {product.originalPrice && (
+          <span className="absolute top-3 left-3 bg-espresso text-white text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider">
+            Sale
+          </span>
+        )}
 
-        {/* Badges */}
-        <div className="absolute top-2.5 left-2.5 flex flex-col gap-1">
-          {product.condition === "new" && (
-            <span className="badge-green text-[10px] px-2 py-0.5">NEW</span>
-          )}
+        {/* Quick view hint */}
+        <div className="absolute bottom-3 inset-x-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+          <div className="bg-white/95 backdrop-blur-sm text-espresso text-xs font-semibold text-center py-2 rounded-xl">
+            View Details
+          </div>
         </div>
       </div>
 
-      {/* Info */}
-      <div className="p-3 flex flex-col flex-1">
-        <p className="text-sm text-gray-800 font-medium leading-snug line-clamp-2 min-h-[40px] mb-auto">
-          {product.title}
+      <div className="p-4">
+        <p className="section-label text-[10px] mb-1">{product.category}</p>
+        <p className="text-sm font-semibold text-espresso leading-snug line-clamp-2 mb-3 group-hover:text-sand-700 transition-colors">
+          {product.name}
         </p>
-        <div className="mt-2">
-          <p className="text-base font-bold text-gray-900">
-            <span className="text-xs font-semibold text-gray-400 mr-0.5">ETB</span>
-            {Number(product.price).toLocaleString()}
-          </p>
-          <span className="flex items-center gap-1 mt-1 text-gray-400 text-xs">
-            <IconMapPin size={11} />
-            <span className="truncate">{product.location || "Addis Ababa"}</span>
-          </span>
+        <div className="flex items-baseline gap-2">
+          <span className="text-base font-bold text-espresso">ETB {product.price.toLocaleString()}</span>
+          {product.originalPrice && (
+            <span className="text-sand-300 text-xs line-through">ETB {product.originalPrice.toLocaleString()}</span>
+          )}
         </div>
       </div>
     </Link>

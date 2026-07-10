@@ -1,244 +1,282 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { IconArrowRight, IconShield, IconTrendingUp, IconZap } from "../components/Icons";
-import api from "../services/api";
+import { useState } from "react";
+import { products, reviews } from "../data/mockData";
 import ProductCard from "../components/ProductCard";
-import CategorySidebar from "../components/CategorySidebar";
+
+const featured = products.filter((p) => p.featured);
 
 const FEATURES = [
-  { icon: <IconZap size={18} />,         title: "Fast & Easy",     desc: "List your item in minutes",           color: "text-accent-500 bg-accent-50" },
-  { icon: <IconShield size={18} />,      title: "Secure Payments", desc: "Multiple trusted methods",            color: "text-emerald-600 bg-emerald-50" },
-  { icon: <IconTrendingUp size={18} />,  title: "Wide Reach",      desc: "Connect with buyers across Ethiopia", color: "text-blue-600 bg-blue-50" },
+  { icon: "✦", title: "Premium Quality", desc: "100% raw human hair, zero shedding guaranteed." },
+  { icon: "✦", title: "Long-Lasting", desc: "Lasts 2–3 years with proper care." },
+  { icon: "✦", title: "Satisfaction Guaranteed", desc: "Every product selected with you in mind." },
 ];
 
-function SkeletonCard() {
+function Stars({ count = 5 }) {
   return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100">
-      <div className="skeleton aspect-[4/3]" />
-      <div className="p-3 space-y-2">
-        <div className="skeleton h-3 w-4/5" />
-        <div className="skeleton h-3 w-3/5" />
-        <div className="skeleton h-4 w-2/5" />
-        <div className="skeleton h-3 w-1/3" />
-      </div>
+    <div className="flex gap-0.5">
+      {[1, 2, 3, 4, 5].map((s) => (
+        <svg key={s} className={`w-3.5 h-3.5 ${s <= count ? "text-gold-400" : "text-sand-200"}`}
+          fill="currentColor" viewBox="0 0 20 20">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
+      ))}
     </div>
   );
 }
 
-function FeaturedProductCard({ product }) {
-  return (
-    <Link
-      to={`/products/${product.id}`}
-      className="flex items-center gap-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 rounded-2xl px-4 py-3 transition-all duration-200 group"
-    >
-      <img
-        src={product.images?.[0] || "https://placehold.co/56x56?text=+"}
-        alt={product.title}
-        className="w-14 h-14 rounded-xl object-cover shrink-0 group-hover:scale-105 transition-transform duration-200"
-      />
-      <div className="min-w-0">
-        <p className="text-white text-sm font-semibold truncate">{product.title}</p>
-        <p className="text-gray-300 text-xs mt-0.5 truncate">{product.category}</p>
-        <p className="text-accent-400 font-black text-sm mt-0.5">
-          ETB {Number(product.price).toLocaleString()}
-        </p>
-      </div>
-      <div className="w-7 h-7 rounded-full bg-accent-500 flex items-center justify-center shrink-0 ml-auto group-hover:bg-accent-400 transition-colors">
-        <IconArrowRight size={13} className="text-white" />
-      </div>
-    </Link>
-  );
-}
-
 export default function Home() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    api.get("/products/?limit=20&sort=created_at")
-      .then((r) => setProducts(r.data.products))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const featured = products.slice(0, 3);
-  const heroProduct = products[0];
+  const [form, setForm] = useState({ name: "", phone: "", treatment: "", date: "", reminder: false });
+  const [submitted, setSubmitted] = useState(false);
+  const f = (field) => (e) => setForm((s) => ({ ...s, [field]: e.target.value }));
 
   return (
     <div>
       {/* ── Hero ── */}
-      <div
-        className="relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)" }}
-      >
-        {/* Watermark text */}
-        <div
-          className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
-          aria-hidden="true"
-        >
-          <span
-            className="font-black text-white/[0.04] leading-none whitespace-nowrap"
-            style={{ fontSize: "clamp(80px, 18vw, 220px)" }}
-          >
-            VIBEY
-          </span>
-        </div>
+      <section className="relative bg-champagne overflow-hidden min-h-[600px]">
+        {/* Background texture */}
+        <div className="absolute inset-0 opacity-30"
+          style={{ backgroundImage: "radial-gradient(circle at 20% 80%, #e8d9c4 0%, transparent 50%), radial-gradient(circle at 80% 20%, #f0d08a22 0%, transparent 50%)" }} />
 
-        {/* Glow blobs */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%)", transform: "translate(20%, -30%)" }} />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%)", transform: "translate(-30%, 40%)" }} />
+        <div className="max-w-6xl mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center min-h-[600px]">
+          {/* Text */}
+          <div className="flex-1 py-20 md:py-0 max-w-[520px]">
+            <div className="inline-flex items-center gap-2 bg-espresso/8 border border-espresso/10 rounded-full px-4 py-1.5 mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse" />
+              <span className="text-xs font-semibold text-sand-600 tracking-wide">Premium Human Hair · Ethiopia</span>
+            </div>
 
-        <div className="max-w-7xl mx-auto px-4 pt-12 pb-6 relative z-10">
-          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-4">
+            <h1 className="font-serif text-5xl md:text-6xl lg:text-[4rem] font-bold text-espresso leading-[1.08] mb-6">
+              Enhance Your<br />
+              <span className="italic text-sand-500">Natural</span> Beauty<br />
+              With Exquisite Hair
+            </h1>
 
-            {/* Left — copy */}
-            <div className="flex-1 max-w-xl">
-              <div className="inline-flex items-center gap-2 bg-white/10 text-white/80 text-xs font-semibold px-3 py-1.5 rounded-full mb-6 backdrop-blur-sm border border-white/10">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent-400 animate-pulse" />
-                Ethiopia's #1 Online Marketplace
-              </div>
+            <p className="text-sand-500 text-base leading-relaxed mb-10 max-w-sm">
+              Zero shedding. Softness that lasts. Premium wigs and bundles crafted for your confidence.
+            </p>
 
-              <h1 className="font-black text-white leading-[1.05] mb-5"
-                style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}>
-                Discover &amp; Buy<br />
-                <span style={{
-                  background: "linear-gradient(90deg, #fb923c, #f97316, #fdba74)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}>
-                  Anything
-                </span>{" "}
-                You Want
-              </h1>
+            <div className="flex flex-wrap gap-3">
+              <Link to="/shop"
+                className="btn-primary px-8 py-4 text-sm rounded-2xl">
+                Shop Collection
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+              <a href="#contact"
+                onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); }}
+                className="btn-outline px-8 py-4 text-sm rounded-2xl">
+                Book Consultation
+              </a>
+            </div>
 
-              <p className="text-gray-400 text-sm leading-relaxed mb-8 max-w-md">
-                Connect with thousands of sellers across Ethiopia. Electronics, fashion, handcrafts and more — all in one place.
-              </p>
-
-              <div className="flex flex-wrap gap-3 mb-10">
-                <Link to="/products"
-                  className="inline-flex items-center gap-2 text-white font-bold px-7 py-3.5 rounded-2xl text-sm transition-all duration-150 active:scale-95 shadow-lg"
-                  style={{ background: "linear-gradient(135deg, #f97316, #ea6c0a)" }}>
-                  Shop Now <IconArrowRight size={15} />
-                </Link>
-                <Link to="/register?role=seller"
-                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold px-7 py-3.5 rounded-2xl text-sm transition-all border border-white/20 backdrop-blur-sm">
-                  Start Selling
-                </Link>
-              </div>
-
-              {/* Stats row */}
-              <div className="flex gap-6">
+            {/* Social proof */}
+            <div className="flex items-center gap-4 mt-10">
+              <div className="flex -space-x-2">
                 {[
-                  { value: "10K+", label: "Products" },
-                  { value: "2K+",  label: "Sellers" },
-                  { value: "50K+", label: "Buyers" },
-                ].map((s) => (
-                  <div key={s.label}>
-                    <p className="text-white font-black text-xl leading-none">{s.value}</p>
-                    <p className="text-gray-500 text-xs mt-0.5">{s.label}</p>
-                  </div>
+                  "/asset/astu.jpg",
+                  "/asset/akla.png",
+                  "/asset/yadeshi pic.jfif",
+                  "/asset/contactyada.png",
+                ].map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt="Happy customer"
+                    className="w-8 h-8 rounded-full object-cover object-top border-2 border-champagne"
+                  />
                 ))}
               </div>
-            </div>
-
-            {/* Right — floating hero product */}
-            <div className="flex-1 flex justify-center lg:justify-end relative">
-              <div className="relative w-full max-w-sm lg:max-w-md">
-                {/* Ring decoration */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="w-72 h-72 lg:w-96 lg:h-96 rounded-full border border-white/5" />
-                  <div className="absolute w-56 h-56 lg:w-72 lg:h-72 rounded-full border border-white/5" />
-                </div>
-
-                {heroProduct ? (
-                  <Link to={`/products/${heroProduct.id}`} className="block relative z-10">
-                    <img
-                      src={heroProduct.images?.[0] || "https://placehold.co/480x400?text=Featured"}
-                      alt={heroProduct.title}
-                      className="w-full max-h-80 object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
-                      style={{ filter: "drop-shadow(0 30px 60px rgba(249,115,22,0.3))" }}
-                    />
-                  </Link>
-                ) : (
-                  <div className="w-full h-64 flex items-center justify-center">
-                    <span className="text-8xl opacity-20 select-none">🛍️</span>
-                  </div>
-                )}
+              <div>
+                <div className="flex items-center gap-1 mb-0.5"><Stars /><span className="text-xs font-bold text-espresso ml-1">4.9</span></div>
+                <p className="text-xs text-sand-400">Loved by 500+ customers</p>
               </div>
             </div>
           </div>
 
-          {/* Featured product cards */}
-          {featured.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4 pb-6">
-              {featured.map((p) => (
-                <FeaturedProductCard key={p.id} product={p} />
-              ))}
-            </div>
-          )}
+          {/* Hero image */}
+          <div className="flex-1 flex justify-end items-end self-end relative">
+            {/* Decorative ring */}
+            <div className="absolute right-8 bottom-8 w-72 h-72 rounded-full border border-sand-200/60 hidden md:block" />
+            <div className="absolute right-14 bottom-14 w-52 h-52 rounded-full border border-sand-200/40 hidden md:block" />
+            <img
+              src="/asset/yadeshi pic.jfif"
+              alt="Yadeshi Demisse showcasing Yada Hair"
+              className="relative z-10 w-full max-w-[420px] object-cover object-top"
+              style={{ maxHeight: 560 }}
+            />
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* ── Features strip ── */}
-      <div className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex flex-wrap gap-4 sm:gap-8 justify-center sm:justify-start">
-            {FEATURES.map((f) => (
-              <div key={f.title} className="flex items-center gap-2.5">
-                <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${f.color}`}>
-                  {f.icon}
+      {/* ── Stats bar ── */}
+      <section className="bg-espresso text-white">
+        <div className="max-w-6xl mx-auto px-6 py-5 grid grid-cols-3 divide-x divide-white/10">
+          {[
+            { value: "500+", label: "Happy Customers" },
+            { value: "100%", label: "Human Hair" },
+            { value: "2–3 yrs", label: "Lifespan" },
+          ].map((s) => (
+            <div key={s.label} className="text-center px-4">
+              <p className="font-serif font-bold text-xl md:text-2xl text-gold-300">{s.value}</p>
+              <p className="text-[11px] text-white/50 mt-0.5 uppercase tracking-wider">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Featured Products ── */}
+      <section className="max-w-6xl mx-auto px-6 py-20">
+        <div className="flex items-end justify-between mb-10">
+          <div>
+            <p className="section-label mb-2">Handpicked for you</p>
+            <h2 className="font-serif text-4xl font-bold text-espresso">Our Collection</h2>
+          </div>
+          <Link to="/shop"
+            className="hidden md:flex items-center gap-2 text-sm font-semibold text-sand-500 hover:text-espresso transition-colors group">
+            View All
+            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+          {featured.map((p) => <ProductCard key={p.id} product={p} />)}
+        </div>
+        <div className="md:hidden text-center mt-8">
+          <Link to="/shop" className="btn-outline rounded-2xl px-8 text-sm">View All Products</Link>
+        </div>
+      </section>
+
+      {/* ── Why Choose ── */}
+      <section className="bg-sand-50">
+        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-stretch">
+          <div className="md:w-[45%] relative overflow-hidden">
+            <img src="/asset/shopping.webp" alt="Yada Hair quality"
+              className="w-full h-80 md:h-full object-cover object-top" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-sand-50/20" />
+          </div>
+
+          <div className="md:w-[55%] px-8 md:px-14 py-16 flex flex-col justify-center">
+            <p className="section-label mb-3">Why Us</p>
+            <h2 className="font-serif text-4xl font-bold text-espresso mb-4 leading-tight">
+              Why Choose<br />Yada Hair?
+            </h2>
+            <p className="text-sand-500 text-sm leading-relaxed mb-8">
+              Every strand is sourced, inspected, and curated by Yadeshi herself — ensuring you receive only the finest quality hair.
+            </p>
+            <ul className="space-y-5 mb-10">
+              {FEATURES.map((f) => (
+                <li key={f.title} className="flex items-start gap-4">
+                  <span className="text-gold-400 font-bold text-lg mt-0.5 leading-none">{f.icon}</span>
+                  <div>
+                    <p className="font-semibold text-espresso text-sm">{f.title}</p>
+                    <p className="text-sand-400 text-sm mt-0.5">{f.desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <Link to="/shop" className="btn-primary self-start rounded-2xl">Shop Now</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Testimonials ── */}
+      <section className="max-w-6xl mx-auto px-6 py-20">
+        <div className="text-center mb-12">
+          <p className="section-label mb-3">Real Reviews</p>
+          <h2 className="font-serif text-4xl font-bold text-espresso">Don't Take Our Word For It</h2>
+        </div>
+        <div className="grid md:grid-cols-2 gap-6">
+          {reviews.map((r) => (
+            <div key={r.id}
+              className="bg-white rounded-3xl p-7 shadow-card hover:shadow-card-hover transition-shadow duration-300 flex gap-6">
+              <img src={r.photo} alt={r.name}
+                className="w-24 h-28 md:w-28 md:h-36 object-cover object-top rounded-2xl shrink-0" />
+              <div className="flex flex-col justify-between">
+                <div>
+                  <Stars />
+                  <p className="text-sand-600 text-sm leading-relaxed mt-3 mb-4 italic">"{r.text}"</p>
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-gray-800">{f.title}</p>
-                  <p className="text-[11px] text-gray-500">{f.desc}</p>
+                  <p className="font-bold text-espresso text-sm">{r.name}</p>
+                  <p className="text-sand-400 text-xs">{r.handle}</p>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Main listings ── */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="flex gap-5 items-start">
-          <CategorySidebar />
-
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="font-bold text-gray-900 text-base">Latest Listings</h2>
-                <p className="text-xs text-gray-500 mt-0.5">Fresh products added daily</p>
-              </div>
-              <Link to="/products"
-                className="inline-flex items-center gap-1 text-sm text-accent-500 hover:text-accent-600 font-semibold transition-colors">
-                View all <IconArrowRight size={14} />
-              </Link>
             </div>
+          ))}
+        </div>
+      </section>
 
-            {loading ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
-              </div>
-            ) : products.length === 0 ? (
-              <div className="text-center py-20 text-gray-400">
-                <p className="text-5xl mb-3">🛍️</p>
-                <p className="font-medium text-gray-600 mb-1">No listings yet</p>
-                <p className="text-sm mb-5">Be the first to sell something!</p>
-                <Link to="/register?role=seller"
-                  className="inline-flex items-center gap-2 bg-accent-500 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-accent-600 transition-colors">
-                  Start Selling
-                </Link>
+      {/* ── Booking ── */}
+      <section id="contact" className="bg-champagne scroll-mt-20">
+        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-stretch">
+          <div className="md:w-[45%] overflow-hidden">
+            <img src="/asset/contactyada.png" alt="Book with Yadeshi"
+              className="w-full h-72 md:h-full object-cover object-top" />
+          </div>
+
+          <div className="md:w-[55%] px-8 md:px-12 py-14">
+            <p className="section-label mb-3">Get in Touch</p>
+            <h2 className="font-serif text-3xl font-bold text-espresso mb-2">Book a Consultation</h2>
+            <p className="text-sand-400 text-sm mb-8">Get personalised advice directly from Yadeshi.</p>
+
+            {submitted ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <p className="font-serif text-xl font-bold text-espresso mb-2">Booking Received!</p>
+                <p className="text-sand-400 text-sm">We'll reach out to confirm your appointment.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                {products.map((p) => <ProductCard key={p.id} product={p} />)}
-              </div>
+              <form onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-sand-500 mb-2 uppercase tracking-wide">Name</label>
+                    <input type="text" placeholder="Your name" required className="form-input" value={form.name} onChange={f("name")} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-sand-500 mb-2 uppercase tracking-wide">Treatment</label>
+                    <select required className="form-input" value={form.treatment} onChange={f("treatment")}>
+                      <option value="">Select</option>
+                      <option>Wig Installation</option>
+                      <option>Hair Styling</option>
+                      <option>Consultation</option>
+                      <option>Bundle Selection</option>
+                      <option>Custom Wig Order</option>
+                      <option>Hair Treatment</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-sand-500 mb-2 uppercase tracking-wide">Phone</label>
+                    <input type="tel" placeholder="+251" required className="form-input" value={form.phone} onChange={f("phone")} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-sand-500 mb-2 uppercase tracking-wide">Date</label>
+                    <input type="date" required className="form-input" value={form.date} onChange={f("date")} />
+                  </div>
+                </div>
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input type="checkbox" className="mt-0.5 w-4 h-4 accent-espresso shrink-0"
+                    checked={form.reminder}
+                    onChange={(e) => setForm((s) => ({ ...s, reminder: e.target.checked }))} />
+                  <span className="text-xs text-sand-400 group-hover:text-sand-600 transition-colors">
+                    Send me booking reminders via SMS/Email
+                  </span>
+                </label>
+                <div className="flex justify-end pt-2">
+                  <button type="submit" className="btn-primary px-10 rounded-2xl">Book Now</button>
+                </div>
+              </form>
             )}
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

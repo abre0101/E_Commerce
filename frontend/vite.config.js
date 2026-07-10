@@ -6,7 +6,12 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      "/api": "http://localhost:5000",
+      // Proxy Chapa API calls to avoid CORS in development
+      "/chapa": {
+        target: "https://api.chapa.co",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/chapa/, ""),
+      },
     },
   },
 });

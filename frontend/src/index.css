@@ -4,99 +4,114 @@
 
 @layer base {
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-
   body {
-    font-family: "Inter", system-ui, sans-serif;
-    background: #f8f9fb;
-    color: #111827;
-    line-height: 1.5;
+    font-family: "DM Sans", system-ui, sans-serif;
+    background: #faf7f2;
+    color: #1c1209;
+    line-height: 1.65;
   }
-
   a { text-decoration: none; color: inherit; }
-
   input, textarea, select, button { font-family: inherit; }
 }
 
 @layer components {
-  /* ── Skeleton shimmer ── */
-  .skeleton {
-    background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 0.5rem;
-  }
-
-  /* ── Form inputs ── */
-  .form-input {
-    @apply w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm bg-white outline-none
-           transition-all duration-150 placeholder:text-gray-400;
-  }
-  .form-input:focus {
-    border-color: #1a1a2e;
-    box-shadow: 0 0 0 3px rgb(26 26 46 / 0.08);
-  }
-
   /* ── Buttons ── */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2
-           text-white font-semibold text-sm px-5 py-2.5 rounded-xl
-           transition-all duration-150 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
-    background-color: #1a1a2e;
+           text-white font-semibold text-sm px-7 py-3.5 rounded-2xl
+           transition-all duration-200 active:scale-[0.97]
+           disabled:opacity-50 disabled:cursor-not-allowed;
+    background-color: #1C0A00;
+    box-shadow: 0 8px 32px -4px rgb(28 10 0 / 0.18);
   }
-  .btn-primary:hover { background-color: #0f3460; }
-
-  .btn-accent {
-    @apply inline-flex items-center justify-center gap-2
-           text-white font-semibold text-sm px-5 py-2.5 rounded-xl
-           transition-all duration-150 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
-    background-color: #f97316;
-  }
-  .btn-accent:hover { background-color: #ea6c0a; }
+  .btn-primary:hover { background-color: #3d2c1e; }
 
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 border border-gray-200 bg-white hover:bg-gray-50
-           text-gray-700 font-semibold text-sm px-5 py-2.5 rounded-xl
-           transition-all duration-150 active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-2
+           font-semibold text-sm px-7 py-3.5 rounded-2xl
+           transition-all duration-200 active:scale-[0.97] disabled:opacity-50;
+    border: 2px solid #1C0A00;
+    color: #1C0A00;
   }
+  .btn-outline:hover { background-color: #1C0A00; color: white; }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 text-gray-600 hover:text-gray-900
-           hover:bg-gray-100 font-medium text-sm px-4 py-2 rounded-lg
+    @apply inline-flex items-center justify-center gap-2
+           font-medium text-sm px-4 py-2 rounded-xl
            transition-all duration-150;
+    color: #7d6040;
+  }
+  .btn-ghost:hover { background-color: #f3ece0; color: #1C0A00; }
+
+  /* ── Form inputs ── */
+  .form-input {
+    @apply w-full bg-white rounded-xl px-4 py-3 text-sm outline-none
+           transition-all duration-200;
+    border: 1px solid #e8d9c4;
+    color: #1c1209;
+  }
+  .form-input::placeholder { color: #b89970; }
+  .form-input:focus {
+    border-color: #9a7a50;
+    box-shadow: 0 0 0 4px rgb(154 122 80 / 0.1);
+  }
+
+  select.form-input {
+    @apply appearance-none cursor-pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239a7a50' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 2.5rem;
   }
 
   /* ── Cards ── */
   .card {
-    @apply bg-white rounded-2xl border border-gray-100;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+    @apply bg-white rounded-2xl;
+    box-shadow: 0 4px 20px 0 rgb(0 0 0 / 0.07);
+    border: 1px solid rgb(232 217 196 / 0.6);
   }
 
-  /* ── Badges ── */
-  .badge {
-    @apply inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full;
-  }
-  .badge-green  { @apply badge bg-emerald-50 text-emerald-700; }
-  .badge-orange { @apply badge bg-orange-50 text-orange-700; }
-  .badge-blue   { @apply badge bg-blue-50 text-blue-700; }
-  .badge-purple { @apply badge bg-purple-50 text-purple-700; }
-  .badge-red    { @apply badge bg-red-50 text-red-600; }
-  .badge-gray   { @apply badge bg-gray-100 text-gray-600; }
-
-  /* ── Page container ── */
-  .page {
-    @apply max-w-7xl mx-auto px-4 py-6;
+  /* ── Section label ── */
+  .section-label {
+    @apply block text-xs font-semibold uppercase;
+    letter-spacing: 0.2em;
+    color: #b89970;
   }
 
-  /* ── Section heading ── */
-  .section-title {
-    @apply text-xl font-bold text-gray-900;
+  /* ── Skeleton shimmer ── */
+  .skeleton {
+    background: linear-gradient(90deg, #ede8e0 25%, #f5f0e8 50%, #ede8e0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+    border-radius: 0.75rem;
   }
 }
 
 @layer utilities {
-  .line-clamp-1 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
-  .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-  .line-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
 }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #faf7f2; }
+::-webkit-scrollbar-thumb { background: #d4bc99; border-radius: 99px; }
+
+/* ── Google Maps autocomplete ── */
+.pac-container {
+  z-index: 9999 !important;
+  border-radius: 12px;
+  border: 1px solid #e8d9c4;
+  box-shadow: 0 12px 40px rgb(0 0 0 / 0.12);
+  margin-top: 4px;
+  font-family: "DM Sans", sans-serif;
+}
+.pac-item { padding: 10px 14px; font-size: 13px; color: #3d2c1e; cursor: pointer; }
+.pac-item:hover, .pac-item-selected { background: #faf7f2; }
+.pac-icon { display: none; }
