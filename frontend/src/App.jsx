@@ -8,6 +8,11 @@ import Cart from "./pages/Cart";
 import PaymentVerify from "./pages/PaymentVerify";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import FAQ from "./pages/FAQ";
+import Terms from "./pages/Terms";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import RequireAuth from "./components/RequireAuth";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminLayout from "./pages/admin/AdminLayout";
@@ -55,6 +60,11 @@ export default function App() {
       <Route path="/products/:id" element={<StoreLayout><ProductDetail /></StoreLayout>} />
       <Route path="/login" element={<StoreLayout><Login /></StoreLayout>} />
       <Route path="/register" element={<StoreLayout><Register /></StoreLayout>} />
+      <Route path="/about" element={<StoreLayout><About /></StoreLayout>} />
+      <Route path="/contact" element={<StoreLayout><Contact /></StoreLayout>} />
+      <Route path="/faq" element={<StoreLayout><FAQ /></StoreLayout>} />
+      <Route path="/terms" element={<StoreLayout><Terms /></StoreLayout>} />
+      <Route path="/privacy" element={<StoreLayout><PrivacyPolicy /></StoreLayout>} />
 
       {/* ── Protected (must be logged in) ── */}
       <Route path="/cart" element={<StoreLayout><RequireAuth><Cart /></RequireAuth></StoreLayout>} />

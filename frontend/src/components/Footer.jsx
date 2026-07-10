@@ -61,8 +61,8 @@ export default function Footer() {
         <div>
           <h4 className="font-semibold text-sm mb-5 uppercase tracking-wider" style={{ color: "#C9A961" }}>Information</h4>
           <ul className="space-y-3 text-sm">
-            <li><Link to="/" className="transition-colors hover:text-white" style={{ color: "#b8b8b8" }}>About</Link></li>
-            <li><a href="#contact" className="transition-colors hover:text-white" style={{ color: "#b8b8b8" }}>Contact</a></li>
+            <li><Link to="/about" className="transition-colors hover:text-white" style={{ color: "#b8b8b8" }}>About</Link></li>
+            <li><Link to="/contact" className="transition-colors hover:text-white" style={{ color: "#b8b8b8" }}>Contact</Link></li>
             <li><Link to="/shop" className="transition-colors hover:text-white" style={{ color: "#b8b8b8" }}>Shop</Link></li>
           </ul>
         </div>
@@ -71,9 +71,9 @@ export default function Footer() {
         <div>
           <h4 className="font-semibold text-sm mb-5 uppercase tracking-wider" style={{ color: "#C9A961" }}>Help Center</h4>
           <ul className="space-y-3 text-sm">
-            <li><a href="#" className="transition-colors hover:text-white" style={{ color: "#b8b8b8" }}>FAQ</a></li>
-            <li><a href="#" className="transition-colors hover:text-white" style={{ color: "#b8b8b8" }}>Terms & Conditions</a></li>
-            <li><a href="#" className="transition-colors hover:text-white" style={{ color: "#b8b8b8" }}>Privacy Policy</a></li>
+            <li><Link to="/faq" className="transition-colors hover:text-white" style={{ color: "#b8b8b8" }}>FAQ</Link></li>
+            <li><Link to="/terms" className="transition-colors hover:text-white" style={{ color: "#b8b8b8" }}>Terms & Conditions</Link></li>
+            <li><Link to="/privacy" className="transition-colors hover:text-white" style={{ color: "#b8b8b8" }}>Privacy Policy</Link></li>
           </ul>
         </div>
 
