@@ -22,10 +22,10 @@ function Toggle({ on, onChange, disabled = false, color }) {
 }
 
 const catColor = cat => ({
-  Bundles:   { bg: "rgba(244,114,182,0.12)", color: "#ec4899" },
-  Wigs:      { bg: "rgba(168,85,247,0.12)",  color: "#a855f7" },
+  Bundles:   { bg: "rgba(22,163,74,0.1)", color: "#16a34a" },
+  Wigs:      { bg: "rgba(22,163,74,0.12)",  color: "#16a34a" },
   Closures:  { bg: "rgba(96,165,250,0.12)",  color: "#3b82f6" },
-}[cat] || { bg: "rgba(156,143,160,0.12)", color: "#9c8fa0" });
+}[cat] || { bg: "rgba(156,143,160,0.12)", color: "#6b7280" });
 
 export default function AdminProducts() {
   const { session } = useAdminStore();
@@ -52,33 +52,33 @@ export default function AdminProducts() {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-white rounded-2xl border p-5" style={{ borderColor: "#ede9f0" }}>
-          <p className="text-2xl font-bold" style={{ color: "#1a1825" }}>{initialProducts.length}</p>
-          <p className="text-xs font-semibold uppercase tracking-wider mt-1" style={{ color: "#9c8fa0" }}>Total Products</p>
+        <div className="bg-white rounded-2xl border p-5" style={{ borderColor: "#e5e7eb" }}>
+          <p className="text-2xl font-bold" style={{ color: "#111827" }}>{initialProducts.length}</p>
+          <p className="text-xs font-semibold uppercase tracking-wider mt-1" style={{ color: "#6b7280" }}>Total Products</p>
         </div>
-        <div className="bg-white rounded-2xl border p-5" style={{ borderColor: "#ede9f0" }}>
+        <div className="bg-white rounded-2xl border p-5" style={{ borderColor: "#e5e7eb" }}>
           <p className="text-2xl font-bold" style={{ color: "#059669" }}>{inStockCount}</p>
-          <p className="text-xs font-semibold uppercase tracking-wider mt-1" style={{ color: "#9c8fa0" }}>In Stock</p>
+          <p className="text-xs font-semibold uppercase tracking-wider mt-1" style={{ color: "#6b7280" }}>In Stock</p>
         </div>
         {isAdmin && (
-          <div className="bg-white rounded-2xl border p-5" style={{ borderColor: "#ede9f0" }}>
-            <p className="text-2xl font-bold" style={{ color: "#f472b6" }}>{featuredCount}</p>
-            <p className="text-xs font-semibold uppercase tracking-wider mt-1" style={{ color: "#9c8fa0" }}>Featured</p>
+          <div className="bg-white rounded-2xl border p-5" style={{ borderColor: "#e5e7eb" }}>
+            <p className="text-2xl font-bold" style={{ color: "#22c55e" }}>{featuredCount}</p>
+            <p className="text-xs font-semibold uppercase tracking-wider mt-1" style={{ color: "#6b7280" }}>Featured</p>
           </div>
         )}
       </div>
 
       {/* Table card */}
-      <div className="bg-white rounded-2xl border overflow-hidden" style={{ borderColor: "#ede9f0" }}>
+      <div className="bg-white rounded-2xl border overflow-hidden" style={{ borderColor: "#e5e7eb" }}>
         {/* Toolbar */}
-        <div className="px-5 py-4 border-b flex items-center justify-between gap-4" style={{ borderColor: "#f3f0f6" }}>
+        <div className="px-5 py-4 border-b flex items-center justify-between gap-4" style={{ borderColor: "#f3f4f6" }}>
           <input
             type="text"
             placeholder="Search products…"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="px-3 py-2 rounded-xl text-sm border outline-none focus:ring-2 focus:ring-purple-200 transition-all"
-            style={{ borderColor: "#e5e0eb", color: "#1a1825", maxWidth: 260 }}
+            className="px-3 py-2 rounded-xl text-sm border outline-none focus:ring-2 focus:ring-green-200 transition-all"
+            style={{ borderColor: "#d1d5db", color: "#111827", maxWidth: 260 }}
           />
           {!isAdmin && (
             <span className="text-xs font-semibold px-3 py-1.5 rounded-full"
@@ -89,29 +89,29 @@ export default function AdminProducts() {
         </div>
 
         <table className="w-full text-sm">
-          <thead style={{ background: "#faf8fc" }}>
+          <thead style={{ background: "#f9fafb" }}>
             <tr>
-              <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: "#9c8fa0" }}>Product</th>
-              <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: "#9c8fa0" }}>Category</th>
-              {isAdmin && <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: "#9c8fa0" }}>Price</th>}
-              <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: "#9c8fa0" }}>Rating</th>
-              <th className="px-5 py-3 text-center text-xs font-semibold uppercase tracking-wider" style={{ color: "#9c8fa0" }}>In Stock</th>
-              {isAdmin && <th className="px-5 py-3 text-center text-xs font-semibold uppercase tracking-wider" style={{ color: "#9c8fa0" }}>Featured</th>}
+              <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: "#6b7280" }}>Product</th>
+              <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: "#6b7280" }}>Category</th>
+              {isAdmin && <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: "#6b7280" }}>Price</th>}
+              <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: "#6b7280" }}>Rating</th>
+              <th className="px-5 py-3 text-center text-xs font-semibold uppercase tracking-wider" style={{ color: "#6b7280" }}>In Stock</th>
+              {isAdmin && <th className="px-5 py-3 text-center text-xs font-semibold uppercase tracking-wider" style={{ color: "#6b7280" }}>Featured</th>}
             </tr>
           </thead>
           <tbody>
             {products.map(p => {
               const cc = catColor(p.category);
               return (
-                <tr key={p.id} className="border-t hover:bg-purple-50/30 transition-colors" style={{ borderColor: "#f3f0f6" }}>
+                <tr key={p.id} className="border-t hover:bg-gray-50 transition-colors" style={{ borderColor: "#f3f4f6" }}>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <img src={p.images[0]} alt={p.name}
                         className="w-11 h-13 object-cover object-top rounded-xl shrink-0"
                         style={{ width: 44, height: 52, borderRadius: 12 }} />
                       <div>
-                        <p className="font-semibold" style={{ color: "#1a1825" }}>{p.name}</p>
-                        <p className="text-xs mt-0.5" style={{ color: "#9c8fa0" }}>{p.lengths?.length} lengths</p>
+                        <p className="font-semibold" style={{ color: "#111827" }}>{p.name}</p>
+                        <p className="text-xs mt-0.5" style={{ color: "#6b7280" }}>{p.lengths?.length} lengths</p>
                       </div>
                     </div>
                   </td>
@@ -120,22 +120,22 @@ export default function AdminProducts() {
                   </td>
                   {isAdmin && (
                     <td className="px-5 py-3.5">
-                      <p className="font-bold" style={{ color: "#a855f7" }}>ETB {p.price.toLocaleString()}</p>
+                      <p className="font-bold" style={{ color: "#16a34a" }}>ETB {p.price.toLocaleString()}</p>
                       {p.originalPrice && (
-                        <p className="text-xs line-through" style={{ color: "#c4bbc8" }}>ETB {p.originalPrice.toLocaleString()}</p>
+                        <p className="text-xs line-through" style={{ color: "#9ca3af" }}>ETB {p.originalPrice.toLocaleString()}</p>
                       )}
                     </td>
                   )}
                   <td className="px-5 py-3.5">
-                    <span className="text-sm font-semibold" style={{ color: "#f472b6" }}>⭐ {p.rating}</span>
-                    <span className="text-xs ml-1" style={{ color: "#9c8fa0" }}>({p.reviewCount})</span>
+                    <span className="text-sm font-semibold" style={{ color: "#22c55e" }}>⭐ {p.rating}</span>
+                    <span className="text-xs ml-1" style={{ color: "#6b7280" }}>({p.reviewCount})</span>
                   </td>
                   <td className="px-5 py-3.5 text-center">
                     <Toggle on={p.inStock} color="#34d399" onChange={() => toggle(p.id, "inStock")} />
                   </td>
                   {isAdmin && (
                     <td className="px-5 py-3.5 text-center">
-                      <Toggle on={p.featured} color="#f472b6" onChange={() => toggle(p.id, "featured")} />
+                      <Toggle on={p.featured} color="#22c55e" onChange={() => toggle(p.id, "featured")} />
                     </td>
                   )}
                 </tr>
@@ -145,7 +145,7 @@ export default function AdminProducts() {
         </table>
 
         {products.length === 0 && (
-          <div className="py-12 text-center text-sm" style={{ color: "#9c8fa0" }}>No products match your search.</div>
+          <div className="py-12 text-center text-sm" style={{ color: "#6b7280" }}>No products match your search.</div>
         )}
       </div>
     </div>

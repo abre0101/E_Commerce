@@ -83,30 +83,28 @@ const PAGE_TITLES = {
   "/admin/staff":         "Staff",
 };
 
-// Warm rose-gold for active items
-const ACTIVE_BG   = "rgba(212,166,102,0.15)";
-const ACTIVE_TEXT = "#e8c47a";
-const ACTIVE_ICON = "#d4a666";
-const ACTIVE_BAR  = "linear-gradient(180deg,#e8c47a,#c9935a)";
-const IDLE_TEXT   = "rgba(232,215,196,0.55)";
-const IDLE_ICON   = "rgba(232,215,196,0.4)";
-const HOVER_BG    = "rgba(232,215,196,0.07)";
-const HOVER_TEXT  = "rgba(232,215,196,0.9)";
-const GROUP_LABEL = "rgba(212,166,102,0.5)";
+// Clean white sidebar theme (matching reference)
+const ACTIVE_BG   = "#16a34a";
+const ACTIVE_TEXT = "#ffffff";
+const ACTIVE_ICON = "#ffffff";
+const IDLE_TEXT   = "#374151";
+const IDLE_ICON   = "#6b7280";
+const HOVER_BG    = "#f0fdf4";
+const HOVER_TEXT  = "#15803d";
+const GROUP_LABEL = "#9ca3af";
 
 function NavItem({ to, iconKey, label, active, collapsed }) {
   return (
     <Link
       to={to}
       title={collapsed ? label : undefined}
-      className="flex items-center rounded-xl text-sm font-medium transition-all duration-150 relative"
+      className="flex items-center rounded-lg text-sm font-medium transition-all duration-150"
       style={{
-        padding: collapsed ? "9px 0" : "8px 11px",
+        padding: collapsed ? "9px 0" : "8px 12px",
         justifyContent: collapsed ? "center" : "flex-start",
         gap: collapsed ? 0 : 10,
         background: active ? ACTIVE_BG : "transparent",
         color: active ? ACTIVE_TEXT : IDLE_TEXT,
-        border: active ? "1px solid rgba(212,166,102,0.2)" : "1px solid transparent",
       }}
       onMouseEnter={e => {
         if (!active) {
@@ -121,10 +119,6 @@ function NavItem({ to, iconKey, label, active, collapsed }) {
         }
       }}
     >
-      {active && (
-        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[18px] rounded-r-full"
-          style={{ background: ACTIVE_BAR }} />
-      )}
       <span style={{ color: active ? ACTIVE_ICON : IDLE_ICON, flexShrink: 0 }}>
         <Icon d={I[iconKey]} />
       </span>
@@ -153,112 +147,66 @@ export default function AdminLayout() {
   const allGroups = [...NAV, ...(isAdmin ? [ADMIN_GROUP] : [])];
 
   return (
-    <div className="flex min-h-screen" style={{ background: "#faf6f2" }}>
+    <div className="flex min-h-screen" style={{ background: "#f3f4f6" }}>
 
       {/* ═══════════════ SIDEBAR ═══════════════ */}
       <aside
-        className="flex flex-col shrink-0 transition-all duration-300 relative overflow-hidden"
+        className="flex flex-col shrink-0 transition-all duration-300"
         style={{
-          width: collapsed ? 66 : 248,
-          // Deep espresso brown → warm dark chocolate
-          background: "linear-gradient(175deg, #1c0f0a 0%, #27150e 35%, #2e1a10 65%, #251208 100%)",
-          borderRight: "1px solid rgba(212,166,102,0.12)",
+          width: collapsed ? 64 : 240,
+          background: "#ffffff",
+          borderRight: "1px solid #e5e7eb",
         }}
       >
-        {/* Warm glow at top */}
-        <div className="absolute top-0 left-0 right-0 h-40 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse at 50% -10%, rgba(212,130,60,0.18) 0%, transparent 70%)" }} />
-
         {/* ── Logo ── */}
         <div
-          className="flex items-center h-[66px] shrink-0 relative"
+          className="flex items-center h-[60px] shrink-0"
           style={{
-            padding: collapsed ? "0 12px" : "0 16px",
+            padding: collapsed ? "0 16px" : "0 16px",
             justifyContent: collapsed ? "center" : "space-between",
-            borderBottom: "1px solid rgba(212,166,102,0.1)",
+            borderBottom: "1px solid #e5e7eb",
           }}
         >
           {!collapsed && (
-            <div className="flex items-center gap-2.5">
-              {/* Hair strand / crown icon mark */}
-              <div
-                className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-                style={{ background: "linear-gradient(135deg,#c9935a,#e8c47a)" }}
-              >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                style={{ background: "linear-gradient(135deg,#16a34a,#4ade80)" }}>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round"
                     d="M12 2C8 2 5 5 5 9c0 2.5 1 4.5 2.5 6L12 22l4.5-7C18 13.5 19 11.5 19 9c0-4-3-7-7-7z" />
                 </svg>
               </div>
-              <div>
-                <p className="text-sm font-bold leading-none tracking-wide" style={{ color: "#f5e6cc" }}>
-                  YadaHair
-                </p>
-                <p className="text-[10px] font-semibold mt-0.5 tracking-wider" style={{ color: "#c9935a" }}>
-                  Admin Panel
-                </p>
+              <div className="min-w-0">
+                <p className="text-sm font-bold leading-none truncate" style={{ color: "#111827" }}>YadaHair</p>
+                <p className="text-[10px] mt-0.5 font-medium" style={{ color: "#6b7280" }}>Hair Management</p>
               </div>
             </div>
           )}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="w-7 h-7 rounded-lg flex items-center justify-center transition-all"
-            style={{ color: "rgba(212,166,102,0.5)", flexShrink: 0 }}
-            onMouseEnter={e => { e.currentTarget.style.background = "rgba(212,166,102,0.1)"; e.currentTarget.style.color = "#e8c47a"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(212,166,102,0.5)"; }}
+            className="w-7 h-7 rounded-md flex items-center justify-center transition-all shrink-0"
+            style={{ color: "#9ca3af" }}
+            onMouseEnter={e => { e.currentTarget.style.background = "#f3f4f6"; e.currentTarget.style.color = "#374151"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#9ca3af"; }}
           >
             <Icon d={collapsed ? I.chevR : I.chevL} size={15} />
           </button>
         </div>
 
-        {/* ── User chip ── */}
-        <div className="shrink-0" style={{ padding: "10px 8px", borderBottom: "1px solid rgba(212,166,102,0.08)" }}>
-          <div
-            className="flex items-center rounded-xl"
-            style={{
-              padding: collapsed ? "7px 0" : "7px 9px",
-              justifyContent: collapsed ? "center" : "flex-start",
-              gap: collapsed ? 0 : 9,
-              background: "rgba(212,166,102,0.07)",
-              border: "1px solid rgba(212,166,102,0.12)",
-            }}
-          >
-            <div
-              className="w-7 h-7 rounded-lg shrink-0 flex items-center justify-center text-white text-xs font-bold"
-              style={{ background: "linear-gradient(135deg,#c9935a,#a0622e)" }}
-            >
-              {session.name[0].toUpperCase()}
-            </div>
-            {!collapsed && (
-              <div className="min-w-0">
-                <p className="text-xs font-semibold leading-none truncate" style={{ color: "#f5e6cc" }}>
-                  {session.name}
-                </p>
-                <p className="text-[10px] mt-0.5 capitalize font-medium" style={{ color: "#c9935a" }}>
-                  {session.role}
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-
         {/* ── Navigation ── */}
-        <nav className="flex-1 overflow-y-auto" style={{ padding: "10px 7px" }}>
+        <nav className="flex-1 overflow-y-auto" style={{ padding: "12px 8px" }}>
           {allGroups.map(({ group, items }, gi) => (
-            <div key={group} style={{ marginBottom: gi < allGroups.length - 1 ? 18 : 0 }}>
+            <div key={group} style={{ marginBottom: gi < allGroups.length - 1 ? 16 : 0 }}>
               {!collapsed && (
-                <p
-                  className="px-3 mb-1 text-[9px] font-bold uppercase tracking-[0.22em]"
-                  style={{ color: GROUP_LABEL }}
-                >
+                <p className="px-3 mb-1 text-[10px] font-bold uppercase tracking-[0.18em]"
+                  style={{ color: GROUP_LABEL }}>
                   {group}
                 </p>
               )}
               {collapsed && gi > 0 && (
-                <div className="mx-auto mb-2.5 mt-0.5"
-                  style={{ width: 20, height: 1, background: "rgba(212,166,102,0.15)" }} />
+                <div className="mx-auto mb-2 mt-1" style={{ width: 24, height: 1, background: "#e5e7eb" }} />
               )}
-              <div className="space-y-[2px]">
+              <div className="space-y-0.5">
                 {items.map(item => (
                   <NavItem
                     key={item.to}
@@ -275,40 +223,55 @@ export default function AdminLayout() {
         </nav>
 
         {/* ── Footer ── */}
-        <div
-          className="shrink-0 space-y-[2px]"
-          style={{ padding: "7px 7px 12px", borderTop: "1px solid rgba(212,166,102,0.08)" }}
-        >
+        <div style={{ borderTop: "1px solid #e5e7eb", padding: "8px 8px" }}>
           <Link
             to="/"
-            className="flex items-center rounded-xl text-sm transition-all"
+            className="flex items-center rounded-lg text-sm transition-all mb-0.5"
             style={{
-              padding: collapsed ? "8px 0" : "8px 11px",
+              padding: collapsed ? "8px 0" : "8px 12px",
               justifyContent: collapsed ? "center" : "flex-start",
               gap: 10,
               color: IDLE_TEXT,
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = HOVER_BG; e.currentTarget.style.color = HOVER_TEXT; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = IDLE_TEXT; }}
+            onMouseEnter={e => { e.currentTarget.style.background = "#f3f4f6"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
           >
             <span style={{ color: IDLE_ICON, flexShrink: 0 }}><Icon d={I.home} /></span>
-            {!collapsed && <span>View Store</span>}
+            {!collapsed && <span className="font-medium">View Store</span>}
           </Link>
-          <button
-            onClick={logout}
-            className="w-full flex items-center rounded-xl text-sm transition-all"
+
+          {/* User chip */}
+          <div
+            className="flex items-center rounded-lg mt-1"
             style={{
-              padding: collapsed ? "8px 0" : "8px 11px",
+              padding: collapsed ? "7px 0" : "7px 10px",
               justifyContent: collapsed ? "center" : "flex-start",
-              gap: 10,
-              color: IDLE_TEXT,
+              gap: collapsed ? 0 : 8,
+              background: "#f9fafb",
+              border: "1px solid #e5e7eb",
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = "rgba(220,80,80,0.1)"; e.currentTarget.style.color = "#fca5a5"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = IDLE_TEXT; }}
           >
-            <span style={{ color: IDLE_ICON, flexShrink: 0 }}><Icon d={I.logout} /></span>
-            {!collapsed && <span>Sign Out</span>}
-          </button>
+            <div className="w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-white text-xs font-bold"
+              style={{ background: "linear-gradient(135deg,#16a34a,#4ade80)" }}>
+              {session.name[0].toUpperCase()}
+            </div>
+            {!collapsed && (
+              <div className="flex-1 min-w-0 flex items-center justify-between">
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold truncate leading-none" style={{ color: "#111827" }}>{session.name}</p>
+                  <p className="text-[10px] mt-0.5 capitalize" style={{ color: "#6b7280" }}>{session.role}</p>
+                </div>
+                <button onClick={logout} title="Sign out"
+                  className="p-1 rounded transition-all ml-1 shrink-0"
+                  style={{ color: "#9ca3af" }}
+                  onMouseEnter={e => { e.currentTarget.style.color = "#dc2626"; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = "#9ca3af"; }}
+                >
+                  <Icon d={I.logout} size={14} />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </aside>
 
@@ -317,77 +280,47 @@ export default function AdminLayout() {
 
         {/* ── Topbar ── */}
         <header
-          className="h-[66px] shrink-0 flex items-center justify-between"
+          className="h-[60px] shrink-0 flex items-center justify-between"
           style={{
-            padding: "0 28px",
-            background: "linear-gradient(135deg, #fff9f5 0%, #fdf5ee 100%)",
-            borderBottom: "1px solid rgba(193,140,80,0.15)",
-            boxShadow: "0 1px 12px rgba(160,100,40,0.06)",
+            padding: "0 24px",
+            background: "#ffffff",
+            borderBottom: "1px solid #e5e7eb",
           }}
         >
-          {/* Left — page title */}
-          <div className="flex items-center gap-3">
-            <div
-              className="w-1 h-7 rounded-full"
-              style={{ background: "linear-gradient(180deg,#e8c47a,#c9935a)" }}
-            />
-            <div>
-              <h1 className="text-base font-bold leading-tight" style={{ color: "#1c0f0a" }}>
-                {pageTitle}
-              </h1>
-              <p className="text-[11px] font-medium" style={{ color: "#b08050" }}>
-                YadaHair · Admin
-              </p>
-            </div>
+          {/* Left — breadcrumb */}
+          <div className="flex items-center gap-2 text-sm" style={{ color: "#6b7280" }}>
+            <span>YadaHair Admin</span>
+            <span>›</span>
+            <span className="font-semibold" style={{ color: "#111827" }}>{pageTitle}</span>
           </div>
 
           {/* Right */}
           <div className="flex items-center gap-3">
-
-            {/* Date */}
-            <div
-              className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl"
-              style={{ background: "rgba(193,140,80,0.08)", color: "#9a6a3a" }}
-            >
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg"
+              style={{ background: "#f3f4f6", color: "#374151" }}>
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span className="text-xs font-semibold">
+              <span className="text-xs font-medium">
                 {new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
               </span>
             </div>
-
-            <div className="w-px h-6" style={{ background: "rgba(193,140,80,0.2)" }} />
-
-            {/* User */}
-            <div className="flex items-center gap-2.5">
+            <div className="w-px h-5" style={{ background: "#e5e7eb" }} />
+            <div className="flex items-center gap-2">
               <div className="text-right hidden sm:block">
-                <p className="text-xs font-bold leading-none" style={{ color: "#1c0f0a" }}>
-                  {session.name}
-                </p>
-                <p className="text-[10px] mt-0.5 capitalize font-semibold" style={{ color: "#c9935a" }}>
-                  {session.role}
-                </p>
+                <p className="text-xs font-semibold leading-none" style={{ color: "#111827" }}>{session.name}</p>
+                <p className="text-[10px] mt-0.5 capitalize" style={{ color: "#6b7280" }}>{session.role}</p>
               </div>
-              <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm font-bold relative"
-                style={{ background: "linear-gradient(135deg,#c9935a,#a0622e)" }}
-              >
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
+                style={{ background: "linear-gradient(135deg,#16a34a,#4ade80)" }}>
                 {session.name[0].toUpperCase()}
-                <span
-                  className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2"
-                  style={{ background: "#c9935a", borderColor: "#fdf5ee" }}
-                />
               </div>
             </div>
           </div>
         </header>
 
         {/* ── Content ── */}
-        <main
-          className="flex-1 overflow-auto"
-          style={{ padding: 24, background: "#faf6f2" }}
-        >
+        <main className="flex-1 overflow-auto" style={{ padding: 24, background: "#f3f4f6" }}>
           <Outlet />
         </main>
       </div>

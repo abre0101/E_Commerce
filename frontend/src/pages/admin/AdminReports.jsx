@@ -24,15 +24,15 @@ export default function AdminReports() {
   ];
 
   const payments = [
-    { method: "Telebirr", count: 156, pct: 45, color: "#f472b6" },
-    { method: "CBE Birr", count: 98, pct: 28, color: "#a855f7" },
+    { method: "Telebirr", count: 156, pct: 45, color: "#22c55e" },
+    { method: "CBE Birr", count: 98, pct: 28, color: "#16a34a" },
     { method: "Cash on Delivery", count: 72, pct: 21, color: "#60a5fa" },
-    { method: "Other", count: 18, pct: 6, color: "#9c8fa0" },
+    { method: "Other", count: 18, pct: 6, color: "#6b7280" },
   ];
 
   const rankColors = [
-    "linear-gradient(135deg,#f472b6,#ec4899)",
-    "linear-gradient(135deg,#c084fc,#a855f7)",
+    "linear-gradient(135deg,#15803d,#22c55e)",
+    "linear-gradient(135deg,#0369a1,#38bdf8)",
     "linear-gradient(135deg,#60a5fa,#3b82f6)",
     "linear-gradient(135deg,#34d399,#10b981)",
   ];
@@ -46,8 +46,8 @@ export default function AdminReports() {
       {/* Metric cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: "Revenue",    value: "ETB 406,000", sub: "+12% vs last month", grad: "linear-gradient(135deg,#f472b6,#ec4899)" },
-          { label: "Orders",     value: "283",          sub: "+8% vs last month",  grad: "linear-gradient(135deg,#c084fc,#a855f7)" },
+          { label: "Revenue",    value: "ETB 406,000", sub: "+12% vs last month", grad: "linear-gradient(135deg,#15803d,#22c55e)" },
+          { label: "Orders",     value: "283",          sub: "+8% vs last month",  grad: "linear-gradient(135deg,#0369a1,#38bdf8)" },
           { label: "Avg Order",  value: "ETB 1,434",   sub: "+3% vs last month",  grad: "linear-gradient(135deg,#34d399,#10b981)" },
           { label: "Conversion", value: "3.2%",         sub: "Industry avg 2.8%",  grad: "linear-gradient(135deg,#60a5fa,#3b82f6)" },
         ].map(m => (
@@ -62,19 +62,19 @@ export default function AdminReports() {
 
       <div className="grid md:grid-cols-3 gap-5">
         {/* Sales chart */}
-        <div className="md:col-span-2 bg-white rounded-2xl border p-6" style={{ borderColor: "#ede9f0" }}>
+        <div className="md:col-span-2 bg-white rounded-2xl border p-6" style={{ borderColor: "#e5e7eb" }}>
           <div className="flex items-center justify-between mb-6">
             <div>
-              <p className="font-bold" style={{ color: "#1a1825" }}>Sales Trend</p>
-              <p className="text-xs mt-0.5" style={{ color: "#9c8fa0" }}>Revenue over time</p>
+              <p className="font-bold" style={{ color: "#111827" }}>Sales Trend</p>
+              <p className="text-xs mt-0.5" style={{ color: "#6b7280" }}>Revenue over time</p>
             </div>
             <div className="flex gap-2">
               {[["week", "Week"], ["month", "Month"]].map(([tf, label]) => (
                 <button key={tf} onClick={() => setTimeFrame(tf)}
                   className="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all"
                   style={{
-                    background: timeFrame === tf ? "#a855f7" : "rgba(168,85,247,0.08)",
-                    color: timeFrame === tf ? "#fff" : "#a855f7",
+                    background: timeFrame === tf ? "#16a34a" : "rgba(22,163,74,0.08)",
+                    color: timeFrame === tf ? "#fff" : "#16a34a",
                   }}>
                   {label}
                 </button>
@@ -84,38 +84,38 @@ export default function AdminReports() {
           <div className="flex items-end gap-2 h-40">
             {current.map((d, i) => (
               <div key={i} className="flex-1 flex flex-col items-center gap-2">
-                <span className="text-xs font-bold" style={{ color: "#f472b6" }}>
+                <span className="text-xs font-bold" style={{ color: "#22c55e" }}>
                   {(d.sales / 1000).toFixed(0)}K
                 </span>
                 <div className="w-full rounded-t-xl transition-all"
                   style={{
                     height: `${(d.sales / maxVal) * 110}px`,
                     background: i === current.length - 1
-                      ? "linear-gradient(180deg,#f472b6,#a855f7)"
-                      : "rgba(168,85,247,0.18)",
+                      ? "linear-gradient(180deg,#15803d,#22c55e)"
+                      : "rgba(22,163,74,0.12)",
                   }} />
-                <span className="text-[11px]" style={{ color: "#9c8fa0" }}>{d.day}</span>
+                <span className="text-[11px]" style={{ color: "#6b7280" }}>{d.day}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Payment methods */}
-        <div className="bg-white rounded-2xl border p-6" style={{ borderColor: "#ede9f0" }}>
-          <p className="font-bold mb-0.5" style={{ color: "#1a1825" }}>Payment Methods</p>
-          <p className="text-xs mb-5" style={{ color: "#9c8fa0" }}>Transaction breakdown</p>
+        <div className="bg-white rounded-2xl border p-6" style={{ borderColor: "#e5e7eb" }}>
+          <p className="font-bold mb-0.5" style={{ color: "#111827" }}>Payment Methods</p>
+          <p className="text-xs mb-5" style={{ color: "#6b7280" }}>Transaction breakdown</p>
           <div className="space-y-4">
             {payments.map((pm, i) => (
               <div key={i}>
                 <div className="flex justify-between mb-1.5">
-                  <span className="text-sm font-semibold" style={{ color: "#2d2438" }}>{pm.method}</span>
+                  <span className="text-sm font-semibold" style={{ color: "#111827" }}>{pm.method}</span>
                   <span className="text-xs font-bold" style={{ color: pm.color }}>{pm.pct}%</span>
                 </div>
-                <div className="h-2 rounded-full" style={{ background: "#f3f0f6" }}>
+                <div className="h-2 rounded-full" style={{ background: "#f3f4f6" }}>
                   <div className="h-2 rounded-full transition-all"
                     style={{ width: `${pm.pct}%`, background: pm.color }} />
                 </div>
-                <p className="text-xs mt-1" style={{ color: "#9c8fa0" }}>{pm.count} transactions</p>
+                <p className="text-xs mt-1" style={{ color: "#6b7280" }}>{pm.count} transactions</p>
               </div>
             ))}
           </div>
@@ -123,8 +123,8 @@ export default function AdminReports() {
       </div>
 
       {/* Best sellers */}
-      <div className="bg-white rounded-2xl border p-6" style={{ borderColor: "#ede9f0" }}>
-        <p className="font-bold mb-5" style={{ color: "#1a1825" }}>Top Selling Products</p>
+      <div className="bg-white rounded-2xl border p-6" style={{ borderColor: "#e5e7eb" }}>
+        <p className="font-bold mb-5" style={{ color: "#111827" }}>Top Selling Products</p>
         <div className="space-y-4">
           {bestSellers.map((p, i) => (
             <div key={i} className="flex items-center gap-4">
@@ -134,14 +134,14 @@ export default function AdminReports() {
               </div>
               <div className="flex-1">
                 <div className="flex justify-between mb-1">
-                  <span className="text-sm font-semibold" style={{ color: "#1a1825" }}>{p.name}</span>
-                  <span className="text-sm font-bold" style={{ color: "#a855f7" }}>{p.revenue}</span>
+                  <span className="text-sm font-semibold" style={{ color: "#111827" }}>{p.name}</span>
+                  <span className="text-sm font-bold" style={{ color: "#16a34a" }}>{p.revenue}</span>
                 </div>
-                <div className="h-1.5 rounded-full" style={{ background: "#f3f0f6" }}>
+                <div className="h-1.5 rounded-full" style={{ background: "#f3f4f6" }}>
                   <div className="h-1.5 rounded-full transition-all"
-                    style={{ width: `${p.pct}%`, background: "linear-gradient(90deg,#f472b6,#a855f7)" }} />
+                    style={{ width: `${p.pct}%`, background: "linear-gradient(90deg,#15803d,#4ade80)" }} />
                 </div>
-                <p className="text-xs mt-1" style={{ color: "#9c8fa0" }}>{p.units} units sold</p>
+                <p className="text-xs mt-1" style={{ color: "#6b7280" }}>{p.units} units sold</p>
               </div>
             </div>
           ))}
@@ -149,19 +149,19 @@ export default function AdminReports() {
       </div>
 
       {/* Export */}
-      <div className="bg-white rounded-2xl border p-6" style={{ borderColor: "#ede9f0" }}>
-        <p className="font-bold mb-4" style={{ color: "#1a1825" }}>Export Reports</p>
+      <div className="bg-white rounded-2xl border p-6" style={{ borderColor: "#e5e7eb" }}>
+        <p className="font-bold mb-4" style={{ color: "#111827" }}>Export Reports</p>
         <div className="flex flex-wrap gap-3">
           <button className="px-5 py-2.5 rounded-xl font-semibold text-sm text-white"
-            style={{ background: "linear-gradient(135deg,#f472b6,#a855f7)" }}>
+            style={{ background: "linear-gradient(135deg,#15803d,#22c55e)" }}>
             📊 Download PDF
           </button>
           <button className="px-5 py-2.5 rounded-xl font-semibold text-sm"
-            style={{ background: "rgba(168,85,247,0.08)", color: "#a855f7" }}>
+            style={{ background: "rgba(22,163,74,0.08)", color: "#16a34a" }}>
             📋 Download CSV
           </button>
           <button className="px-5 py-2.5 rounded-xl font-semibold text-sm"
-            style={{ background: "rgba(168,85,247,0.08)", color: "#a855f7" }}>
+            style={{ background: "rgba(22,163,74,0.08)", color: "#16a34a" }}>
             📧 Email Report
           </button>
         </div>
