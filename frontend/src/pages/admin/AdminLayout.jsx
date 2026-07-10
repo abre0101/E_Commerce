@@ -1,23 +1,134 @@
 import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
 import useAdminStore from "../../store/useAdminStore";
+import { useState } from "react";
 
-const S = {
-  sidebar: { background: "#0f0a06", borderRight: "1px solid #1c1209" },
-  active:  { background: "rgba(212,149,42,0.12)", color: "#d4952a" },
-  inactive:{ color: "#7d6040" },
-  label:   { color: "#3d2c1e", fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 600 },
+const Icon = ({ d, size = 17 }) => (
+  <svg width={size} height={size} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+    <path strokeLinecap="round" strokeLinejoin="round" d={d} />
+  </svg>
+);
+
+const I = {
+  dashboard:  "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6",
+  calendar:   "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z",
+  customers:  "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z",
+  orders:     "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z",
+  products:   "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4",
+  stock:      "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
+  promotions: "M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z",
+  reports:    "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z",
+  content:    "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z",
+  inquiries:  "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z",
+  staff:      "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z",
+  home:       "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6",
+  logout:     "M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1",
+  chevL:      "M15 19l-7-7 7-7",
+  chevR:      "M9 5l7 7-7 7",
 };
 
-function NavItem({ to, icon, label, active }) {
+const NAV = [
+  {
+    group: "Overview",
+    items: [
+      { to: "/admin", label: "Dashboard", exact: true, icon: "dashboard" },
+    ],
+  },
+  {
+    group: "Business",
+    items: [
+      { to: "/admin/consultations", label: "Consultations", icon: "calendar" },
+      { to: "/admin/customers",     label: "Customers",     icon: "customers" },
+      { to: "/admin/orders",        label: "Orders",        icon: "orders" },
+    ],
+  },
+  {
+    group: "Catalog",
+    items: [
+      { to: "/admin/products",  label: "Products", icon: "products" },
+      { to: "/admin/inventory", label: "Stock",    icon: "stock" },
+    ],
+  },
+  {
+    group: "Growth",
+    items: [
+      { to: "/admin/promotions", label: "Promotions", icon: "promotions" },
+      { to: "/admin/reports",    label: "Reports",    icon: "reports" },
+    ],
+  },
+  {
+    group: "Content",
+    items: [
+      { to: "/admin/content",   label: "Site Content", icon: "content" },
+      { to: "/admin/inquiries", label: "Inquiries",    icon: "inquiries" },
+    ],
+  },
+];
+
+const ADMIN_GROUP = {
+  group: "Team",
+  items: [{ to: "/admin/staff", label: "Staff", icon: "staff" }],
+};
+
+const PAGE_TITLES = {
+  "/admin":               "Dashboard",
+  "/admin/orders":        "Orders",
+  "/admin/products":      "Products",
+  "/admin/consultations": "Consultations",
+  "/admin/customers":     "Customers",
+  "/admin/inventory":     "Stock",
+  "/admin/promotions":    "Promotions",
+  "/admin/content":       "Site Content",
+  "/admin/inquiries":     "Inquiries",
+  "/admin/reports":       "Reports",
+  "/admin/staff":         "Staff",
+};
+
+// Warm rose-gold for active items
+const ACTIVE_BG   = "rgba(212,166,102,0.15)";
+const ACTIVE_TEXT = "#e8c47a";
+const ACTIVE_ICON = "#d4a666";
+const ACTIVE_BAR  = "linear-gradient(180deg,#e8c47a,#c9935a)";
+const IDLE_TEXT   = "rgba(232,215,196,0.55)";
+const IDLE_ICON   = "rgba(232,215,196,0.4)";
+const HOVER_BG    = "rgba(232,215,196,0.07)";
+const HOVER_TEXT  = "rgba(232,215,196,0.9)";
+const GROUP_LABEL = "rgba(212,166,102,0.5)";
+
+function NavItem({ to, iconKey, label, active, collapsed }) {
   return (
-    <Link to={to}
-      style={active ? S.active : S.inactive}
-      className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all hover:text-white group">
-      <span className={`transition-colors ${active ? "text-gold-400" : "text-stone-600 group-hover:text-stone-400"}`}
-        style={active ? { color: "#d4952a" } : {}}>
-        {icon}
+    <Link
+      to={to}
+      title={collapsed ? label : undefined}
+      className="flex items-center rounded-xl text-sm font-medium transition-all duration-150 relative"
+      style={{
+        padding: collapsed ? "9px 0" : "8px 11px",
+        justifyContent: collapsed ? "center" : "flex-start",
+        gap: collapsed ? 0 : 10,
+        background: active ? ACTIVE_BG : "transparent",
+        color: active ? ACTIVE_TEXT : IDLE_TEXT,
+        border: active ? "1px solid rgba(212,166,102,0.2)" : "1px solid transparent",
+      }}
+      onMouseEnter={e => {
+        if (!active) {
+          e.currentTarget.style.background = HOVER_BG;
+          e.currentTarget.style.color = HOVER_TEXT;
+        }
+      }}
+      onMouseLeave={e => {
+        if (!active) {
+          e.currentTarget.style.background = "transparent";
+          e.currentTarget.style.color = IDLE_TEXT;
+        }
+      }}
+    >
+      {active && (
+        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[18px] rounded-r-full"
+          style={{ background: ACTIVE_BAR }} />
+      )}
+      <span style={{ color: active ? ACTIVE_ICON : IDLE_ICON, flexShrink: 0 }}>
+        <Icon d={I[iconKey]} />
       </span>
-      {label}
+      {!collapsed && <span className="truncate">{label}</span>}
     </Link>
   );
 }
@@ -25,99 +136,261 @@ function NavItem({ to, icon, label, active }) {
 export default function AdminLayout() {
   const { session, logout } = useAdminStore();
   const location = useLocation();
+  const [collapsed, setCollapsed] = useState(false);
 
   if (!session) return <Navigate to="/admin/login" replace />;
 
   const isAdmin = session.role === "admin";
-  const is = (path) => path === "/admin" ? location.pathname === "/admin" : location.pathname.startsWith(path);
+  const is = (path, exact) =>
+    exact ? location.pathname === path
+          : location.pathname === path || location.pathname.startsWith(path + "/");
+
+  const pageTitle =
+    Object.entries(PAGE_TITLES).find(([p]) =>
+      p === "/admin" ? location.pathname === "/admin" : location.pathname.startsWith(p)
+    )?.[1] ?? "Admin";
+
+  const allGroups = [...NAV, ...(isAdmin ? [ADMIN_GROUP] : [])];
 
   return (
-    <div className="flex min-h-screen" style={{ background: "#0f0a06" }}>
-      {/* ── Sidebar ── */}
-      <aside className="w-60 shrink-0 flex flex-col" style={S.sidebar}>
+    <div className="flex min-h-screen" style={{ background: "#faf6f2" }}>
 
-        {/* Logo */}
-        <div className="px-6 py-6 border-b" style={{ borderColor: "#1c1209" }}>
-          <div className="flex items-center gap-1 mb-1">
-            <span className="font-serif font-bold text-xl text-white">Yada</span>
-            <span className="font-serif font-bold text-xl" style={{ color: "#d4952a" }}>Hair</span>
-          </div>
-          <div className="flex items-center gap-2 mt-3">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white"
-              style={{ background: isAdmin ? "#d4952a" : "#3d2c1e" }}>
+      {/* ═══════════════ SIDEBAR ═══════════════ */}
+      <aside
+        className="flex flex-col shrink-0 transition-all duration-300 relative overflow-hidden"
+        style={{
+          width: collapsed ? 66 : 248,
+          // Deep espresso brown → warm dark chocolate
+          background: "linear-gradient(175deg, #1c0f0a 0%, #27150e 35%, #2e1a10 65%, #251208 100%)",
+          borderRight: "1px solid rgba(212,166,102,0.12)",
+        }}
+      >
+        {/* Warm glow at top */}
+        <div className="absolute top-0 left-0 right-0 h-40 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse at 50% -10%, rgba(212,130,60,0.18) 0%, transparent 70%)" }} />
+
+        {/* ── Logo ── */}
+        <div
+          className="flex items-center h-[66px] shrink-0 relative"
+          style={{
+            padding: collapsed ? "0 12px" : "0 16px",
+            justifyContent: collapsed ? "center" : "space-between",
+            borderBottom: "1px solid rgba(212,166,102,0.1)",
+          }}
+        >
+          {!collapsed && (
+            <div className="flex items-center gap-2.5">
+              {/* Hair strand / crown icon mark */}
+              <div
+                className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+                style={{ background: "linear-gradient(135deg,#c9935a,#e8c47a)" }}
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round"
+                    d="M12 2C8 2 5 5 5 9c0 2.5 1 4.5 2.5 6L12 22l4.5-7C18 13.5 19 11.5 19 9c0-4-3-7-7-7z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-bold leading-none tracking-wide" style={{ color: "#f5e6cc" }}>
+                  YadaHair
+                </p>
+                <p className="text-[10px] font-semibold mt-0.5 tracking-wider" style={{ color: "#c9935a" }}>
+                  Admin Panel
+                </p>
+              </div>
+            </div>
+          )}
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="w-7 h-7 rounded-lg flex items-center justify-center transition-all"
+            style={{ color: "rgba(212,166,102,0.5)", flexShrink: 0 }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(212,166,102,0.1)"; e.currentTarget.style.color = "#e8c47a"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(212,166,102,0.5)"; }}
+          >
+            <Icon d={collapsed ? I.chevR : I.chevL} size={15} />
+          </button>
+        </div>
+
+        {/* ── User chip ── */}
+        <div className="shrink-0" style={{ padding: "10px 8px", borderBottom: "1px solid rgba(212,166,102,0.08)" }}>
+          <div
+            className="flex items-center rounded-xl"
+            style={{
+              padding: collapsed ? "7px 0" : "7px 9px",
+              justifyContent: collapsed ? "center" : "flex-start",
+              gap: collapsed ? 0 : 9,
+              background: "rgba(212,166,102,0.07)",
+              border: "1px solid rgba(212,166,102,0.12)",
+            }}
+          >
+            <div
+              className="w-7 h-7 rounded-lg shrink-0 flex items-center justify-center text-white text-xs font-bold"
+              style={{ background: "linear-gradient(135deg,#c9935a,#a0622e)" }}
+            >
               {session.name[0].toUpperCase()}
             </div>
-            <div>
-              <p className="text-xs font-semibold text-white leading-none">{session.name}</p>
-              <span className="text-[10px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wide mt-0.5 inline-block"
-                style={isAdmin
-                  ? { background: "rgba(212,149,42,0.15)", color: "#d4952a" }
-                  : { background: "rgba(99,102,241,0.15)", color: "#818cf8" }}>
-                {session.role}
-              </span>
-            </div>
+            {!collapsed && (
+              <div className="min-w-0">
+                <p className="text-xs font-semibold leading-none truncate" style={{ color: "#f5e6cc" }}>
+                  {session.name}
+                </p>
+                <p className="text-[10px] mt-0.5 capitalize font-medium" style={{ color: "#c9935a" }}>
+                  {session.role}
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Nav */}
-        <nav className="flex-1 px-3 py-4 space-y-0.5">
-          <p style={S.label} className="px-4 pb-2">Main</p>
-
-          <NavItem to="/admin" label="Dashboard" active={is("/admin")} icon={
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-            </svg>
-          } />
-
-          <NavItem to="/admin/orders" label="Orders" active={is("/admin/orders")} icon={
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-            </svg>
-          } />
-
-          <NavItem to="/admin/products" label="Products" active={is("/admin/products")} icon={
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-            </svg>
-          } />
-
-          {/* Admin-only */}
-          {isAdmin && (
-            <>
-              <p style={S.label} className="px-4 pt-4 pb-2">Administration</p>
-              <NavItem to="/admin/staff" label="Staff" active={is("/admin/staff")} icon={
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              } />
-            </>
-          )}
+        {/* ── Navigation ── */}
+        <nav className="flex-1 overflow-y-auto" style={{ padding: "10px 7px" }}>
+          {allGroups.map(({ group, items }, gi) => (
+            <div key={group} style={{ marginBottom: gi < allGroups.length - 1 ? 18 : 0 }}>
+              {!collapsed && (
+                <p
+                  className="px-3 mb-1 text-[9px] font-bold uppercase tracking-[0.22em]"
+                  style={{ color: GROUP_LABEL }}
+                >
+                  {group}
+                </p>
+              )}
+              {collapsed && gi > 0 && (
+                <div className="mx-auto mb-2.5 mt-0.5"
+                  style={{ width: 20, height: 1, background: "rgba(212,166,102,0.15)" }} />
+              )}
+              <div className="space-y-[2px]">
+                {items.map(item => (
+                  <NavItem
+                    key={item.to}
+                    to={item.to}
+                    iconKey={item.icon}
+                    label={item.label}
+                    active={is(item.to, item.exact)}
+                    collapsed={collapsed}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
         </nav>
 
-        {/* Bottom */}
-        <div className="px-3 py-4 space-y-0.5 border-t" style={{ borderColor: "#1c1209" }}>
-          <Link to="/"
-            className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all hover:text-white"
-            style={{ color: "#5c4028" }}>
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to Store
+        {/* ── Footer ── */}
+        <div
+          className="shrink-0 space-y-[2px]"
+          style={{ padding: "7px 7px 12px", borderTop: "1px solid rgba(212,166,102,0.08)" }}
+        >
+          <Link
+            to="/"
+            className="flex items-center rounded-xl text-sm transition-all"
+            style={{
+              padding: collapsed ? "8px 0" : "8px 11px",
+              justifyContent: collapsed ? "center" : "flex-start",
+              gap: 10,
+              color: IDLE_TEXT,
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = HOVER_BG; e.currentTarget.style.color = HOVER_TEXT; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = IDLE_TEXT; }}
+          >
+            <span style={{ color: IDLE_ICON, flexShrink: 0 }}><Icon d={I.home} /></span>
+            {!collapsed && <span>View Store</span>}
           </Link>
-          <button onClick={logout}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all text-red-500 hover:bg-red-500/10">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-            Sign Out
+          <button
+            onClick={logout}
+            className="w-full flex items-center rounded-xl text-sm transition-all"
+            style={{
+              padding: collapsed ? "8px 0" : "8px 11px",
+              justifyContent: collapsed ? "center" : "flex-start",
+              gap: 10,
+              color: IDLE_TEXT,
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(220,80,80,0.1)"; e.currentTarget.style.color = "#fca5a5"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = IDLE_TEXT; }}
+          >
+            <span style={{ color: IDLE_ICON, flexShrink: 0 }}><Icon d={I.logout} /></span>
+            {!collapsed && <span>Sign Out</span>}
           </button>
         </div>
       </aside>
 
-      {/* ── Content ── */}
-      <main className="flex-1 overflow-auto" style={{ background: "#f9f6f1" }}>
-        <Outlet />
-      </main>
+      {/* ═══════════════ MAIN ═══════════════ */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+
+        {/* ── Topbar ── */}
+        <header
+          className="h-[66px] shrink-0 flex items-center justify-between"
+          style={{
+            padding: "0 28px",
+            background: "linear-gradient(135deg, #fff9f5 0%, #fdf5ee 100%)",
+            borderBottom: "1px solid rgba(193,140,80,0.15)",
+            boxShadow: "0 1px 12px rgba(160,100,40,0.06)",
+          }}
+        >
+          {/* Left — page title */}
+          <div className="flex items-center gap-3">
+            <div
+              className="w-1 h-7 rounded-full"
+              style={{ background: "linear-gradient(180deg,#e8c47a,#c9935a)" }}
+            />
+            <div>
+              <h1 className="text-base font-bold leading-tight" style={{ color: "#1c0f0a" }}>
+                {pageTitle}
+              </h1>
+              <p className="text-[11px] font-medium" style={{ color: "#b08050" }}>
+                YadaHair · Admin
+              </p>
+            </div>
+          </div>
+
+          {/* Right */}
+          <div className="flex items-center gap-3">
+
+            {/* Date */}
+            <div
+              className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl"
+              style={{ background: "rgba(193,140,80,0.08)", color: "#9a6a3a" }}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span className="text-xs font-semibold">
+                {new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+              </span>
+            </div>
+
+            <div className="w-px h-6" style={{ background: "rgba(193,140,80,0.2)" }} />
+
+            {/* User */}
+            <div className="flex items-center gap-2.5">
+              <div className="text-right hidden sm:block">
+                <p className="text-xs font-bold leading-none" style={{ color: "#1c0f0a" }}>
+                  {session.name}
+                </p>
+                <p className="text-[10px] mt-0.5 capitalize font-semibold" style={{ color: "#c9935a" }}>
+                  {session.role}
+                </p>
+              </div>
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm font-bold relative"
+                style={{ background: "linear-gradient(135deg,#c9935a,#a0622e)" }}
+              >
+                {session.name[0].toUpperCase()}
+                <span
+                  className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2"
+                  style={{ background: "#c9935a", borderColor: "#fdf5ee" }}
+                />
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* ── Content ── */}
+        <main
+          className="flex-1 overflow-auto"
+          style={{ padding: 24, background: "#faf6f2" }}
+        >
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

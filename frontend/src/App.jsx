@@ -15,6 +15,14 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminStaff from "./pages/admin/AdminStaff";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminConsultations from "./pages/admin/AdminConsultations";
+import AdminCustomers from "./pages/admin/AdminCustomers";
+import AdminInventory from "./pages/admin/AdminInventory";
+import AdminPromotions from "./pages/admin/AdminPromotions";
+import AdminContent from "./pages/admin/AdminContent";
+import AdminInquiries from "./pages/admin/AdminInquiries";
+import AdminReports from "./pages/admin/AdminReports";
 
 function StoreLayout({ children }) {
   return (
@@ -56,8 +64,16 @@ export default function App() {
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
+        <Route path="consultations" element={<AdminConsultations />} />
+        <Route path="customers" element={<AdminCustomers />} />
         <Route path="orders" element={<AdminOrders />} />
         <Route path="products" element={<AdminProducts />} />
+        <Route path="inventory" element={<AdminInventory />} />
+        <Route path="promotions" element={<AdminPromotions />} />
+        <Route path="content" element={<AdminContent />} />
+        <Route path="inquiries" element={<AdminInquiries />} />
+        <Route path="reports" element={<AdminReports />} />
+        <Route path="analytics" element={<AdminAnalytics />} />
         <Route path="staff" element={<AdminStaff />} />
       </Route>
 

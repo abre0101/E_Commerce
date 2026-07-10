@@ -9,9 +9,9 @@ export default function Shop() {
     activeCategory === "All" ? products : products.filter((p) => p.category === activeCategory);
 
   return (
-    <div className="max-w-6xl mx-auto px-5 py-12">
-      <h1 className="font-serif text-3xl font-bold text-brown-900 mb-2">Our Collection</h1>
-      <p className="text-brown-500 text-sm mb-8">Premium human hair — zero shedding, long-lasting.</p>
+    <div className="max-w-6xl mx-auto px-5 py-12" style={{ background: "#f7f3f0" }}>
+      <h1 className="font-serif text-3xl font-bold mb-2" style={{ color: "#2a2220" }}>Our Collection</h1>
+      <p className="text-sm mb-8" style={{ color: "#6b6361" }}>Premium human hair — zero shedding, long-lasting.</p>
 
       {/* Category filter */}
       <div className="flex gap-3 flex-wrap mb-8">
@@ -19,11 +19,24 @@ export default function Shop() {
           <button
             key={c}
             onClick={() => setActiveCategory(c)}
-            className={`px-5 py-2 text-sm font-medium border transition-colors ${
+            className={`px-5 py-2 text-sm font-medium border transition-all rounded-lg`}
+            style={
               activeCategory === c
-                ? "bg-brown-800 text-white border-brown-800"
-                : "bg-white text-brown-700 border-brown-200 hover:border-brown-500"
-            }`}
+                ? { background: "#8B4F6D", color: "#ffffff", borderColor: "#8B4F6D" }
+                : { background: "transparent", color: "#6b6361", borderColor: "rgba(139,79,109,0.2)" }
+            }
+            onMouseEnter={(e) => {
+              if (activeCategory !== c) {
+                e.currentTarget.style.borderColor = "#8B4F6D";
+                e.currentTarget.style.color = "#8B4F6D";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (activeCategory !== c) {
+                e.currentTarget.style.borderColor = "rgba(139,79,109,0.2)";
+                e.currentTarget.style.color = "#6b6361";
+              }
+            }}
           >
             {c}
           </button>
@@ -38,7 +51,7 @@ export default function Shop() {
       </div>
 
       {filtered.length === 0 && (
-        <div className="text-center py-20 text-brown-400">
+        <div className="text-center py-20" style={{ color: "#b8b8b8" }}>
           <p className="text-lg font-medium">No products in this category yet.</p>
         </div>
       )}
