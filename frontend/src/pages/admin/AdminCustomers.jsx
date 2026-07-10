@@ -93,6 +93,7 @@ export default function AdminCustomers() {
           </div>
         </div>
 
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead style={{ background: "#f9fafb" }}>
             <tr>
@@ -128,6 +129,7 @@ export default function AdminCustomers() {
             })}
           </tbody>
         </table>
+        </div>
 
         {filtered.length === 0 && (
           <div className="py-14 text-center" style={{ color: "#6b7280" }}>No customers found.</div>

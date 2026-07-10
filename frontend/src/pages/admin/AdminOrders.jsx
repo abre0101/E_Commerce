@@ -110,6 +110,7 @@ export default function AdminOrders() {
             <p className="text-sm mt-1" style={{ color: "#6b7280" }}>Completed Chapa payments will appear here.</p>
           </div>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead style={{ background: "#f9fafb" }}>
               <tr>
@@ -275,6 +276,7 @@ export default function AdminOrders() {
               })}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>

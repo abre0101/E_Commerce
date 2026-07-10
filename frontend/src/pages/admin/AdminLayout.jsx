@@ -1,6 +1,6 @@
 import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
 import useAdminStore from "../../store/useAdminStore";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Icon = ({ d, size = 17 }) => (
   <svg width={size} height={size} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
@@ -131,6 +131,10 @@ export default function AdminLayout() {
   const { session, logout } = useAdminStore();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Close mobile sidebar on route change
+  useEffect(() => { setMobileOpen(false); }, [location.pathname]);
 
   if (!session) return <Navigate to="/admin/login" replace />;
 
@@ -146,42 +150,41 @@ export default function AdminLayout() {
 
   const allGroups = [...NAV, ...(isAdmin ? [ADMIN_GROUP] : [])];
 
-  return (
-    <div className="flex min-h-screen" style={{ background: "#f3f4f6" }}>
-
-      {/* ═══════════════ SIDEBAR ═══════════════ */}
-      <aside
-        className="flex flex-col shrink-0 transition-all duration-300"
+  const SidebarContent = ({ isMobile = false }) => (
+    <>
+      {/* ── Logo ── */}
+      <div
+        className="flex items-center h-[60px] shrink-0"
         style={{
-          width: collapsed ? 64 : 240,
-          background: "#ffffff",
-          borderRight: "1px solid #e5e7eb",
+          padding: (!isMobile && collapsed) ? "0 16px" : "0 16px",
+          justifyContent: (!isMobile && collapsed) ? "center" : "space-between",
+          borderBottom: "1px solid #e5e7eb",
         }}
       >
-        {/* ── Logo ── */}
-        <div
-          className="flex items-center h-[60px] shrink-0"
-          style={{
-            padding: collapsed ? "0 16px" : "0 16px",
-            justifyContent: collapsed ? "center" : "space-between",
-            borderBottom: "1px solid #e5e7eb",
-          }}
-        >
-          {!collapsed && (
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-                style={{ background: "linear-gradient(135deg,#16a34a,#4ade80)" }}>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round"
-                    d="M12 2C8 2 5 5 5 9c0 2.5 1 4.5 2.5 6L12 22l4.5-7C18 13.5 19 11.5 19 9c0-4-3-7-7-7z" />
-                </svg>
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-bold leading-none truncate" style={{ color: "#111827" }}>YadaHair</p>
-                <p className="text-[10px] mt-0.5 font-medium" style={{ color: "#6b7280" }}>Hair Management</p>
-              </div>
+        {(isMobile || !collapsed) && (
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+              style={{ background: "linear-gradient(135deg,#16a34a,#4ade80)" }}>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M12 2C8 2 5 5 5 9c0 2.5 1 4.5 2.5 6L12 22l4.5-7C18 13.5 19 11.5 19 9c0-4-3-7-7-7z" />
+              </svg>
             </div>
-          )}
+            <div className="min-w-0">
+              <p className="text-sm font-bold leading-none truncate" style={{ color: "#111827" }}>YadaHair</p>
+              <p className="text-[10px] mt-0.5 font-medium" style={{ color: "#6b7280" }}>Hair Management</p>
+            </div>
+          </div>
+        )}
+        {isMobile ? (
+          <button onClick={() => setMobileOpen(false)}
+            className="w-7 h-7 rounded-md flex items-center justify-center ml-auto"
+            style={{ color: "#9ca3af" }}>
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        ) : (
           <button
             onClick={() => setCollapsed(!collapsed)}
             className="w-7 h-7 rounded-md flex items-center justify-center transition-all shrink-0"
@@ -191,107 +194,153 @@ export default function AdminLayout() {
           >
             <Icon d={collapsed ? I.chevR : I.chevL} size={15} />
           </button>
-        </div>
+        )}
+      </div>
 
-        {/* ── Navigation ── */}
-        <nav className="flex-1 overflow-y-auto" style={{ padding: "12px 8px" }}>
-          {allGroups.map(({ group, items }, gi) => (
-            <div key={group} style={{ marginBottom: gi < allGroups.length - 1 ? 16 : 0 }}>
-              {!collapsed && (
-                <p className="px-3 mb-1 text-[10px] font-bold uppercase tracking-[0.18em]"
-                  style={{ color: GROUP_LABEL }}>
-                  {group}
-                </p>
-              )}
-              {collapsed && gi > 0 && (
-                <div className="mx-auto mb-2 mt-1" style={{ width: 24, height: 1, background: "#e5e7eb" }} />
-              )}
-              <div className="space-y-0.5">
-                {items.map(item => (
-                  <NavItem
-                    key={item.to}
-                    to={item.to}
-                    iconKey={item.icon}
-                    label={item.label}
-                    active={is(item.to, item.exact)}
-                    collapsed={collapsed}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </nav>
-
-        {/* ── Footer ── */}
-        <div style={{ borderTop: "1px solid #e5e7eb", padding: "8px 8px" }}>
-          <Link
-            to="/"
-            className="flex items-center rounded-lg text-sm transition-all mb-0.5"
-            style={{
-              padding: collapsed ? "8px 0" : "8px 12px",
-              justifyContent: collapsed ? "center" : "flex-start",
-              gap: 10,
-              color: IDLE_TEXT,
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = "#f3f4f6"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
-          >
-            <span style={{ color: IDLE_ICON, flexShrink: 0 }}><Icon d={I.home} /></span>
-            {!collapsed && <span className="font-medium">View Store</span>}
-          </Link>
-
-          {/* User chip */}
-          <div
-            className="flex items-center rounded-lg mt-1"
-            style={{
-              padding: collapsed ? "7px 0" : "7px 10px",
-              justifyContent: collapsed ? "center" : "flex-start",
-              gap: collapsed ? 0 : 8,
-              background: "#f9fafb",
-              border: "1px solid #e5e7eb",
-            }}
-          >
-            <div className="w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-white text-xs font-bold"
-              style={{ background: "linear-gradient(135deg,#16a34a,#4ade80)" }}>
-              {session.name[0].toUpperCase()}
-            </div>
-            {!collapsed && (
-              <div className="flex-1 min-w-0 flex items-center justify-between">
-                <div className="min-w-0">
-                  <p className="text-xs font-semibold truncate leading-none" style={{ color: "#111827" }}>{session.name}</p>
-                  <p className="text-[10px] mt-0.5 capitalize" style={{ color: "#6b7280" }}>{session.role}</p>
-                </div>
-                <button onClick={logout} title="Sign out"
-                  className="p-1 rounded transition-all ml-1 shrink-0"
-                  style={{ color: "#9ca3af" }}
-                  onMouseEnter={e => { e.currentTarget.style.color = "#dc2626"; }}
-                  onMouseLeave={e => { e.currentTarget.style.color = "#9ca3af"; }}
-                >
-                  <Icon d={I.logout} size={14} />
-                </button>
-              </div>
+      {/* ── Navigation ── */}
+      <nav className="flex-1 overflow-y-auto" style={{ padding: "12px 8px" }}>
+        {allGroups.map(({ group, items }, gi) => (
+          <div key={group} style={{ marginBottom: gi < allGroups.length - 1 ? 16 : 0 }}>
+            {(!collapsed || isMobile) && (
+              <p className="px-3 mb-1 text-[10px] font-bold uppercase tracking-[0.18em]"
+                style={{ color: GROUP_LABEL }}>
+                {group}
+              </p>
             )}
+            {collapsed && !isMobile && gi > 0 && (
+              <div className="mx-auto mb-2 mt-1" style={{ width: 24, height: 1, background: "#e5e7eb" }} />
+            )}
+            <div className="space-y-0.5">
+              {items.map(item => (
+                <NavItem
+                  key={item.to}
+                  to={item.to}
+                  iconKey={item.icon}
+                  label={item.label}
+                  active={is(item.to, item.exact)}
+                  collapsed={collapsed && !isMobile}
+                />
+              ))}
+            </div>
           </div>
+        ))}
+      </nav>
+
+      {/* ── Footer ── */}
+      <div style={{ borderTop: "1px solid #e5e7eb", padding: "8px 8px" }}>
+        <Link
+          to="/"
+          className="flex items-center rounded-lg text-sm transition-all mb-0.5"
+          style={{
+            padding: (collapsed && !isMobile) ? "8px 0" : "8px 12px",
+            justifyContent: (collapsed && !isMobile) ? "center" : "flex-start",
+            gap: 10,
+            color: IDLE_TEXT,
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = "#f3f4f6"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
+        >
+          <span style={{ color: IDLE_ICON, flexShrink: 0 }}><Icon d={I.home} /></span>
+          {(!collapsed || isMobile) && <span className="font-medium">View Store</span>}
+        </Link>
+
+        {/* User chip */}
+        <div
+          className="flex items-center rounded-lg mt-1"
+          style={{
+            padding: (collapsed && !isMobile) ? "7px 0" : "7px 10px",
+            justifyContent: (collapsed && !isMobile) ? "center" : "flex-start",
+            gap: (collapsed && !isMobile) ? 0 : 8,
+            background: "#f9fafb",
+            border: "1px solid #e5e7eb",
+          }}
+        >
+          <div className="w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-white text-xs font-bold"
+            style={{ background: "linear-gradient(135deg,#16a34a,#4ade80)" }}>
+            {session.name[0].toUpperCase()}
+          </div>
+          {(!collapsed || isMobile) && (
+            <div className="flex-1 min-w-0 flex items-center justify-between">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold truncate leading-none" style={{ color: "#111827" }}>{session.name}</p>
+                <p className="text-[10px] mt-0.5 capitalize" style={{ color: "#6b7280" }}>{session.role}</p>
+              </div>
+              <button onClick={logout} title="Sign out"
+                className="p-1 rounded transition-all ml-1 shrink-0"
+                style={{ color: "#9ca3af" }}
+                onMouseEnter={e => { e.currentTarget.style.color = "#dc2626"; }}
+                onMouseLeave={e => { e.currentTarget.style.color = "#9ca3af"; }}
+              >
+                <Icon d={I.logout} size={14} />
+              </button>
+            </div>
+          )}
         </div>
+      </div>
+    </>
+  );
+
+  return (
+    <div className="flex min-h-screen" style={{ background: "#f3f4f6" }}>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 bg-black/40 z-40 lg:hidden" onClick={() => setMobileOpen(false)} />
+      )}
+
+      {/* Mobile sidebar drawer */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-white transition-transform duration-300 lg:hidden`}
+        style={{
+          width: 260,
+          borderRight: "1px solid #e5e7eb",
+          transform: mobileOpen ? "translateX(0)" : "translateX(-100%)",
+        }}
+      >
+        <SidebarContent isMobile />
+      </aside>
+
+      {/* ═══════════════ DESKTOP SIDEBAR ═══════════════ */}
+      <aside
+        className="hidden lg:flex flex-col shrink-0 transition-all duration-300"
+        style={{
+          width: collapsed ? 64 : 240,
+          background: "#ffffff",
+          borderRight: "1px solid #e5e7eb",
+        }}
+      >
+        <SidebarContent />
       </aside>
 
       {/* ═══════════════ MAIN ═══════════════ */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
 
         {/* ── Topbar ── */}
         <header
           className="h-[60px] shrink-0 flex items-center justify-between"
           style={{
-            padding: "0 24px",
+            padding: "0 16px",
             background: "#ffffff",
             borderBottom: "1px solid #e5e7eb",
           }}
         >
-          {/* Left — breadcrumb */}
-          <div className="flex items-center gap-2 text-sm" style={{ color: "#6b7280" }}>
-            <span>YadaHair Admin</span>
-            <span>›</span>
-            <span className="font-semibold" style={{ color: "#111827" }}>{pageTitle}</span>
+          {/* Left — mobile menu + breadcrumb */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="lg:hidden w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{ color: "#6b7280", background: "#f3f4f6" }}
+              aria-label="Open menu"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <div className="flex items-center gap-2 text-sm" style={{ color: "#6b7280" }}>
+              <span className="hidden sm:inline">YadaHair Admin</span>
+              <span className="hidden sm:inline">›</span>
+              <span className="font-semibold" style={{ color: "#111827" }}>{pageTitle}</span>
+            </div>
           </div>
 
           {/* Right */}
@@ -305,7 +354,7 @@ export default function AdminLayout() {
                 {new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
               </span>
             </div>
-            <div className="w-px h-5" style={{ background: "#e5e7eb" }} />
+            <div className="w-px h-5 hidden md:block" style={{ background: "#e5e7eb" }} />
             <div className="flex items-center gap-2">
               <div className="text-right hidden sm:block">
                 <p className="text-xs font-semibold leading-none" style={{ color: "#111827" }}>{session.name}</p>
@@ -320,7 +369,7 @@ export default function AdminLayout() {
         </header>
 
         {/* ── Content ── */}
-        <main className="flex-1 overflow-auto" style={{ padding: 24, background: "#f3f4f6" }}>
+        <main className="flex-1 overflow-auto" style={{ padding: "16px", background: "#f3f4f6" }}>
           <Outlet />
         </main>
       </div>

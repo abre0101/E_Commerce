@@ -51,7 +51,7 @@ export default function AdminProducts() {
     <div className="space-y-5 max-w-6xl">
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         <div className="bg-white rounded-2xl border p-5" style={{ borderColor: "#e5e7eb" }}>
           <p className="text-2xl font-bold" style={{ color: "#111827" }}>{initialProducts.length}</p>
           <p className="text-xs font-semibold uppercase tracking-wider mt-1" style={{ color: "#6b7280" }}>Total Products</p>
@@ -71,7 +71,7 @@ export default function AdminProducts() {
       {/* Table card */}
       <div className="bg-white rounded-2xl border overflow-hidden" style={{ borderColor: "#e5e7eb" }}>
         {/* Toolbar */}
-        <div className="px-5 py-4 border-b flex items-center justify-between gap-4" style={{ borderColor: "#f3f4f6" }}>
+        <div className="px-5 py-4 border-b flex flex-wrap items-center justify-between gap-4" style={{ borderColor: "#f3f4f6" }}>
           <input
             type="text"
             placeholder="Search products…"
@@ -88,6 +88,7 @@ export default function AdminProducts() {
           )}
         </div>
 
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead style={{ background: "#f9fafb" }}>
             <tr>
@@ -147,6 +148,7 @@ export default function AdminProducts() {
         {products.length === 0 && (
           <div className="py-12 text-center text-sm" style={{ color: "#6b7280" }}>No products match your search.</div>
         )}
+        </div>
       </div>
     </div>
   );

@@ -157,7 +157,7 @@ function HeroCarousel() {
             </Link>
             <a href="#contact"
               onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); }}
-              className="btn-outline px-8 py-4 text-sm rounded-2xl">
+              className="btn-primary px-8 py-4 text-sm rounded-2xl">
               Book Consultation
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -244,9 +244,9 @@ export default function Home() {
             { value: "100%", label: "Human Hair" },
             { value: "2–3 yrs", label: "Lifespan" },
           ].map((s) => (
-            <div key={s.label} className="text-center px-4">
-              <p className="font-serif font-bold text-xl md:text-2xl text-gold-300">{s.value}</p>
-              <p className="text-[11px] text-white/50 mt-0.5 uppercase tracking-wider">{s.label}</p>
+            <div key={s.label} className="text-center px-2 md:px-4">
+              <p className="font-serif font-bold text-lg md:text-2xl text-gold-300">{s.value}</p>
+              <p className="text-[10px] text-white/50 mt-0.5 uppercase tracking-wider">{s.label}</p>
             </div>
           ))}
         </div>
@@ -371,7 +371,7 @@ export default function Home() {
         </div>
 
         {/* Trust strip */}
-        <div className="mt-10 grid grid-cols-3 gap-4">
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
             { icon: "✦", label: "100% Human Hair", sub: "Raw & unprocessed" },
             { icon: "↻", label: "Zero Shedding", sub: "Guaranteed quality" },
@@ -431,7 +431,7 @@ export default function Home() {
             </div>
 
             {/* Right — content */}
-            <div className="px-10 md:px-14 py-16 flex flex-col justify-center" style={{ background: "#f5f0f0" }}>
+            <div className="px-6 md:px-14 py-10 md:py-16 flex flex-col justify-center" style={{ background: "#f5f0f0" }}>
               <p className="text-xs font-bold uppercase tracking-[0.25em] mb-4"
                 style={{ color: "#8B4F6D" }}>Why Us</p>
 
@@ -548,9 +548,9 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-stretch">
           <div className="md:w-[45%] overflow-hidden">
             <img src="/asset/contactyada.png" alt="Book with Yadeshi"
-              className="w-full h-72 md:h-full object-cover object-top" />
+              className="w-full h-56 md:h-full object-cover object-top" />
           </div>
-          <div className="md:w-[55%] px-8 md:px-12 py-14">
+          <div className="md:w-[55%] px-6 md:px-12 py-10 md:py-14">
             <p className="section-label mb-3">Get in Touch</p>
             <h2 className="font-serif text-3xl font-bold" style={{ color: "#2a2220" }}>Book a Consultation</h2>
             <p className="text-sm mb-8" style={{ color: "#6b6361" }}>Get personalised advice directly from Yadeshi.</p>

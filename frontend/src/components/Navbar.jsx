@@ -46,13 +46,13 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50">
       {/* Promo bar with social media */}
-      <div className="bg-espresso text-sand-200 py-3 px-6" style={{ background: "#2a2220", borderBottom: "1px solid rgba(201,169,97,0.2)" }}>
+      <div className="bg-espresso text-sand-200 py-3 px-4 md:px-6" style={{ background: "#2a2220", borderBottom: "1px solid rgba(201,169,97,0.2)" }}>
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="text-[12px] tracking-widest font-semibold uppercase" style={{ color: "#C9A961" }}>
+          <div className="hidden sm:block text-[12px] tracking-widest font-semibold uppercase" style={{ color: "#C9A961" }}>
             Premium Human Hair Shop
           </div>
           {/* Social media links */}
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-4 sm:gap-5 mx-auto sm:mx-0">
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
               className="transition-all hover:scale-110" style={{ color: "#C9A961" }} aria-label="Facebook">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

@@ -55,7 +55,7 @@ export default function AdminDashboard() {
     <div className="space-y-6 max-w-7xl">
 
       {/* Banner */}
-      <div className="rounded-xl p-6 flex items-center justify-between relative overflow-hidden"
+      <div className="rounded-xl p-5 md:p-6 flex items-center justify-between relative overflow-hidden"
         style={{ background: "linear-gradient(135deg,#15803d 0%,#16a34a 60%,#22c55e 100%)" }}>
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 90% 50%, #ffffff 0%, transparent 60%)" }} />
         <div className="relative">
@@ -195,6 +195,7 @@ export default function AdminDashboard() {
             <p className="text-sm mt-1" style={{ color: "#6b7280" }}>Completed payments will appear here.</p>
           </div>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead style={{ background: "#f9fafb" }}>
               <tr>
@@ -223,6 +224,7 @@ export default function AdminDashboard() {
               })}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 
