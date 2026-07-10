@@ -175,15 +175,15 @@ export default function Navbar() {
               <div className="relative hidden md:block" ref={dropRef}>
                 <button onClick={() => setDropOpen(!dropOpen)}
                   className="flex items-center gap-2 pl-1 pr-3 py-1.5 rounded-2xl transition-all"
-                  style={{ backgroundColor: "rgba(139,79,109,0.08)" }} onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(139,79,109,0.12)";
+                  style={{ backgroundColor: "rgba(255,255,255,0.15)" }} onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.25)";
                   }} onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(139,79,109,0.08)";
+                    e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.15)";
                   }}>
-                  <div className="w-8 h-8 rounded-xl text-white flex items-center justify-center text-xs font-bold shrink-0" style={{ background: "#8B4F6D" }}>
+                  <div className="w-8 h-8 rounded-xl text-white flex items-center justify-center text-xs font-bold shrink-0" style={{ background: "rgba(255,255,255,0.3)" }}>
                     {user.name[0].toUpperCase()}
                   </div>
-                  <span className="text-sm font-medium max-w-[90px] truncate" style={{ color: "#8B4F6D" }}>
+                  <span className="text-sm font-medium max-w-[90px] truncate" style={{ color: "#ffffff" }}>
                     {user.name.split(" ")[0]}
                   </span>
                   <svg className={`w-3.5 h-3.5 transition-transform duration-200 ${dropOpen ? "rotate-180" : ""}`}
