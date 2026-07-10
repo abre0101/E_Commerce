@@ -158,9 +158,9 @@ function HeroCarousel() {
             <a href="#contact"
               onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }); }}
               className="inline-flex items-center gap-2 px-8 py-4 text-sm font-semibold rounded-2xl transition-all duration-200 active:scale-[0.97]"
-              style={{ border: "2px solid #C9A961", color: "#C9A961", background: "transparent" }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "#C9A961"; e.currentTarget.style.color = "#2a2220"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#C9A961"; }}>
+              style={{ border: "2px solid #C9A961", color: "#2a2220", background: "#C9A961" }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#C9A961"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "#C9A961"; e.currentTarget.style.color = "#2a2220"; }}>
               Book Consultation
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
