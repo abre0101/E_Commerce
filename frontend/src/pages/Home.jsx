@@ -7,7 +7,7 @@ const featured = products.filter((p) => p.featured);
 
 const SLIDES = [
   {
-    image: null, // placeholder — replace with real image path
+    image: "/asset/contactyada.png", // placeholder — replace with real image path
     tag: "Premium Human Hair · Ethiopia",
     heading: ["Enhance Your", "Natural Beauty", ""],
     sub: "Premium quality human hair extensions and wigs for every style.",
