@@ -2,17 +2,23 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer style={{ background: "#2a2220" }}>
+    <footer style={{ background: "#0a0a0a", borderTop: "1px solid rgba(201,169,97,0.15)" }}>
       {/* CTA band */}
-      <div style={{ borderBottom: "1px solid rgba(201,169,97,0.2)" }}>
+      <div style={{ borderBottom: "1px solid rgba(201,169,97,0.15)" }}>
         <div className="max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <h3 className="font-serif text-2xl font-bold mb-1" style={{ color: "#f5f3f0" }}>Ready to elevate your look?</h3>
-            <p style={{ color: "#c8c8c8" }} className="text-sm">Shop Yada Hair today and experience premium quality human hair.</p>
+            <h3 className="font-serif text-2xl font-bold mb-1" style={{ color: "#fff" }}>
+              Ready to elevate your look?
+            </h3>
+            <p className="text-sm" style={{ color: "#888" }}>
+              Shop Yada Hair today and experience premium quality human hair.
+            </p>
           </div>
-          <Link to="/shop"
-            className="shrink-0 inline-flex items-center gap-2 font-bold text-sm px-7 py-3.5 rounded-2xl hover:scale-105 transition-all shadow-lg"
-            style={{ background: "#8B4F6D", color: "#ffffff" }}>
+          <Link
+            to="/shop"
+            className="shrink-0 inline-flex items-center gap-2 font-bold text-sm px-7 py-3.5 hover:opacity-90 transition-all"
+            style={{ background: "#C9A961", color: "#111" }}
+          >
             Shop Now
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -85,8 +91,8 @@ export default function Footer() {
             <input type="email" placeholder="your@email.com"
               className="flex-1 px-3 py-2.5 text-xs outline-none transition-colors"
               style={{ background: "rgba(201,169,97,0.08)", color: "#f5f3f0" }} />
-            <button className="text-white text-xs px-4 font-semibold transition-all hover:scale-105"
-              style={{ background: "#8B4F6D" }}>
+            <button className="text-black text-xs px-4 font-semibold transition-all hover:opacity-90"
+              style={{ background: "#C9A961" }}>
               Go
             </button>
           </div>

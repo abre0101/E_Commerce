@@ -45,10 +45,16 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50">
-      {/* Promo bar with social media */}
-      <div className="bg-espresso text-sand-200 py-3 px-4 md:px-6" style={{ background: "#2a2220", borderBottom: "1px solid rgba(201,169,97,0.2)" }}>
+      {/* Announcement bar */}
+      <div className="text-center py-2 px-4 text-xs font-bold uppercase tracking-widest"
+        style={{ background: "#C9A961", color: "#111" }}>
+        Free Shipping on Orders $200+
+      </div>
+
+      {/* Social / promo bar */}
+      <div className="py-2.5 px-4 md:px-6" style={{ background: "#111", borderBottom: "1px solid rgba(201,169,97,0.15)" }}>
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="hidden sm:block text-[12px] tracking-widest font-semibold uppercase" style={{ color: "#C9A961" }}>
+          <div className="hidden sm:block text-[11px] tracking-widest font-semibold uppercase" style={{ color: "#C9A961" }}>
             Premium Human Hair Shop
           </div>
           {/* Social media links */}
@@ -89,8 +95,8 @@ export default function Navbar() {
 
       {/* Main nav */}
       <nav className={`transition-all duration-300 ${scrolled ? "shadow-md border-b" : "border-b"}`} style={{
-        background: "#7B2D5E",
-        borderColor: "rgba(201,169,97,0.35)"
+        background: "#111",
+        borderColor: "rgba(201,169,97,0.2)"
       }}>
         <div className="max-w-6xl mx-auto px-6 h-[68px] flex items-center justify-between">
 
@@ -262,7 +268,7 @@ export default function Navbar() {
 
       {/* Mobile drawer */}
       {menuOpen && (
-        <div className="md:hidden border-b shadow-float animate-slide-up" style={{ background: "#7B2D5E", borderColor: "rgba(201,169,97,0.35)" }}>
+        <div className="md:hidden border-b shadow-float animate-slide-up" style={{ background: "#111", borderColor: "rgba(201,169,97,0.2)" }}>
           <div className="max-w-6xl mx-auto px-6 py-5 space-y-1">
             {NAV_LINKS.map((n) =>
               n.scrollTo ? (

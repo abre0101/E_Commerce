@@ -46,77 +46,74 @@ export default function Cart() {
     setSuccess(true);
   };
 
+  const inputCls = "w-full px-4 py-3 text-sm border outline-none transition focus:border-yellow-500";
+  const inputStyle = { borderColor: "#2a2a2a", color: "#fff", background: "transparent" };
+
   if (success) {
     return (
-      <div className="max-w-lg mx-auto px-5 py-24 text-center" style={{ background: "#f7f3f0" }}>
-        <p className="text-5xl mb-5">🎉</p>
-        <h2 className="font-serif text-2xl font-bold mb-3" style={{ color: "#2a2220" }}>Payment Successful!</h2>
-        <p className="text-sm mb-2" style={{ color: "#6b6361" }}>Thank you for your order. Your payment via</p>
-        <p className="font-bold text-base mb-6" style={{ color: "#8B4F6D" }}>Chapa</p>
-        <p className="text-sm mb-8" style={{ color: "#6b6361" }}>was processed successfully. We'll be in touch soon!</p>
-        <Link to="/shop" className="btn-primary">Continue Shopping</Link>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0d0d0d" }}>
+        <div className="max-w-lg mx-auto px-5 py-24 text-center">
+          <p className="text-5xl mb-5">🎉</p>
+          <h2 className="font-serif text-2xl font-bold mb-3" style={{ color: "#fff" }}>Payment Successful!</h2>
+          <p className="text-sm mb-2" style={{ color: "#888" }}>Thank you for your order. Your payment via</p>
+          <p className="font-bold text-base mb-6" style={{ color: "#C9A961" }}>Chapa</p>
+          <p className="text-sm mb-8" style={{ color: "#888" }}>was processed successfully. We'll be in touch soon!</p>
+          <Link to="/shop" className="inline-block px-8 py-3.5 text-sm font-bold uppercase tracking-widest"
+            style={{ background: "#C9A961", color: "#111" }}>Continue Shopping</Link>
+        </div>
       </div>
     );
   }
 
   if (items.length === 0) {
     return (
-      <div className="max-w-lg mx-auto px-5 py-24 text-center" style={{ background: "#f7f3f0" }}>
-        <p className="text-5xl mb-5">🛍️</p>
-        <h2 className="font-serif text-2xl font-bold mb-3" style={{ color: "#2a2220" }}>Your cart is empty</h2>
-        <p className="text-sm mb-8" style={{ color: "#6b6361" }}>Add some beautiful hair to your cart!</p>
-        <Link to="/shop" className="btn-primary">Shop Now</Link>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0d0d0d" }}>
+        <div className="max-w-lg mx-auto px-5 py-24 text-center">
+          <p className="text-5xl mb-5">🛍️</p>
+          <h2 className="font-serif text-2xl font-bold mb-3" style={{ color: "#fff" }}>Your cart is empty</h2>
+          <p className="text-sm mb-8" style={{ color: "#888" }}>Add some beautiful hair to your cart!</p>
+          <Link to="/shop" className="inline-block px-8 py-3.5 text-sm font-bold uppercase tracking-widest"
+            style={{ background: "#C9A961", color: "#111" }}>Shop Now</Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-5 py-12" style={{ background: "#f7f3f0" }}>
-      <h1 className="font-serif text-3xl font-bold mb-8" style={{ color: "#2a2220" }}>Your Cart</h1>
+    <div className="min-h-screen" style={{ background: "#0d0d0d" }}>
+      <div className="max-w-6xl mx-auto px-5 py-12">
+        <p className="text-xs font-bold uppercase tracking-[0.25em] mb-2" style={{ color: "#C9A961" }}>Your Bag</p>
+        <h1 className="font-serif text-3xl font-bold mb-8" style={{ color: "#fff" }}>Your Cart</h1>
 
       <div className="flex flex-col lg:flex-row gap-10">
         {/* Items */}
         <div className="flex-1 space-y-4">
           {items.map((item) => (
-            <div key={item.key} className="flex gap-4 p-4 border" style={{ background: "#ede8e5", borderColor: "rgba(139,79,109,0.15)" }}>
-              <img
-                src={item.product.images[0]}
-                alt={item.product.name}
-                className="w-24 h-28 object-cover object-top shrink-0"
-              />
+            <div key={item.key} className="flex gap-4 p-4 border" style={{ background: "#111", borderColor: "#222" }}>
+              <img src={item.product.images[0]} alt={item.product.name}
+                className="w-24 h-28 object-cover object-top shrink-0" />
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm mb-1" style={{ color: "#2a2220" }}>{item.product.name}</p>
-                <p className="text-xs mb-3" style={{ color: "#6b6361" }}>Length: {item.length}</p>
+                <p className="font-semibold text-sm mb-1" style={{ color: "#fff" }}>{item.product.name}</p>
+                <p className="text-xs mb-3" style={{ color: "#888" }}>Length: {item.length}</p>
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center border" style={{ borderColor: "rgba(139,79,109,0.2)" }}>
-                    <button
-                      onClick={() => updateQty(item.key, item.qty - 1)}
-                      className="w-8 h-8 flex items-center justify-center transition-colors text-lg leading-none"
-                      style={{ color: "#8B4F6D" }} onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "rgba(139,79,109,0.08)";
-                      }} onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "transparent";
-                      }}>−</button>
-                    <span className="w-8 text-center text-sm font-medium">{item.qty}</span>
-                    <button
-                      onClick={() => updateQty(item.key, item.qty + 1)}
-                      className="w-8 h-8 flex items-center justify-center transition-colors text-lg leading-none"
-                      style={{ color: "#8B4F6D" }} onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "rgba(139,79,109,0.08)";
-                      }} onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "transparent";
-                      }}>+</button>
+                  <div className="flex items-center border" style={{ borderColor: "#333" }}>
+                    <button onClick={() => updateQty(item.key, item.qty - 1)}
+                      className="w-8 h-8 flex items-center justify-center text-lg leading-none transition-colors"
+                      style={{ color: "#C9A961" }}>−</button>
+                    <span className="w-8 text-center text-sm font-medium" style={{ color: "#fff" }}>{item.qty}</span>
+                    <button onClick={() => updateQty(item.key, item.qty + 1)}
+                      className="w-8 h-8 flex items-center justify-center text-lg leading-none transition-colors"
+                      style={{ color: "#C9A961" }}>+</button>
                   </div>
-                  <button
-                    onClick={() => removeItem(item.key)}
-                    className="text-xs hover:text-red-700 transition-colors"
-                    style={{ color: "#d9534f" }}
-                  >Remove</button>
+                  <button onClick={() => removeItem(item.key)}
+                    className="text-xs transition-colors" style={{ color: "#f87171" }}>
+                    Remove
+                  </button>
                 </div>
               </div>
               <div className="text-right shrink-0">
-                <p className="font-bold" style={{ color: "#2a2220" }}>ETB {(item.product.price * item.qty).toLocaleString()}</p>
-                <p className="text-xs" style={{ color: "#6b6361" }}>ETB {item.product.price.toLocaleString()} each</p>
+                <p className="font-bold" style={{ color: "#fff" }}>ETB {(item.product.price * item.qty).toLocaleString()}</p>
+                <p className="text-xs" style={{ color: "#888" }}>ETB {item.product.price.toLocaleString()} each</p>
               </div>
             </div>
           ))}
@@ -124,129 +121,98 @@ export default function Cart() {
 
         {/* Summary + checkout */}
         <div className="lg:w-80 shrink-0">
-          {/* Order summary */}
-          <div className="p-6 mb-4" style={{ background: "#ede8e5", border: "1px solid rgba(139,79,109,0.15)" }}>
-            <h3 className="font-semibold mb-4" style={{ color: "#2a2220" }}>Order Summary</h3>
+          <div className="p-6 mb-4 border" style={{ background: "#111", borderColor: "#222" }}>
+            <h3 className="font-semibold mb-4" style={{ color: "#fff" }}>Order Summary</h3>
             <div className="flex justify-between text-sm mb-2">
-              <span style={{ color: "#6b6361" }}>Subtotal</span>
-              <span className="font-medium" style={{ color: "#2a2220" }}>ETB {total().toLocaleString()}</span>
+              <span style={{ color: "#888" }}>Subtotal</span>
+              <span className="font-medium" style={{ color: "#fff" }}>ETB {total().toLocaleString()}</span>
             </div>
             <div className="flex justify-between text-sm mb-4">
-              <span style={{ color: "#6b6361" }}>Delivery</span>
-              <span className="font-medium" style={{ color: "#8B4F6D" }}>Free</span>
+              <span style={{ color: "#888" }}>Delivery</span>
+              <span className="font-medium" style={{ color: "#C9A961" }}>Free</span>
             </div>
-            <div className="pt-4 flex justify-between font-bold" style={{ borderTop: "1px solid rgba(139,79,109,0.15)", color: "#2a2220" }}>
+            <div className="pt-4 flex justify-between font-bold" style={{ borderTop: "1px solid #222", color: "#fff" }}>
               <span>Total</span>
               <span>ETB {total().toLocaleString()}</span>
             </div>
           </div>
 
-          {/* Checkout form */}
-          <form onSubmit={handleCheckout} className="p-6 space-y-4" style={{ background: "rgba(139,79,109,0.06)", border: "1px solid rgba(139,79,109,0.15)" }}>
+          <form onSubmit={handleCheckout} className="p-6 space-y-4 border" style={{ background: "#111", borderColor: "#222" }}>
             <div>
-              <h3 className="font-semibold mb-1" style={{ color: "#2a2220" }}>Your Details</h3>
-              <p className="text-xs mb-4" style={{ color: "#6b6361" }}>✓ Pre-filled from your profile. Edit as needed.</p>
+              <h3 className="font-semibold mb-1" style={{ color: "#fff" }}>Your Details</h3>
+              <p className="text-xs mb-4" style={{ color: "#666" }}>✓ Pre-filled from your profile. Edit as needed.</p>
             </div>
 
-            {/* Personal Info */}
-            <div className="pb-3 border-b" style={{ borderColor: "rgba(139,79,109,0.15)" }}>
-              <label className="text-xs font-semibold mb-2 block" style={{ color: "#8B4F6D" }}>Personal Information</label>
+            <div className="pb-3 border-b" style={{ borderColor: "#222" }}>
+              <label className="text-xs font-semibold mb-2 block uppercase tracking-wide" style={{ color: "#C9A961" }}>Personal Information</label>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: "#6b6361" }}>First Name</label>
-                  <input
-                    required
-                    placeholder="First Name"
-                    className="form-input text-sm"
-                    value={form.firstName}
-                    onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-                  />
+                  <label className="text-xs mb-1 block" style={{ color: "#888" }}>First Name</label>
+                  <input required placeholder="First Name" className={inputCls} style={inputStyle}
+                    value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} />
                 </div>
                 <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: "#6b6361" }}>Last Name</label>
-                  <input
-                    required
-                    placeholder="Last Name"
-                    className="form-input text-sm"
-                    value={form.lastName}
-                    onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-                  />
+                  <label className="text-xs mb-1 block" style={{ color: "#888" }}>Last Name</label>
+                  <input required placeholder="Last Name" className={inputCls} style={inputStyle}
+                    value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} />
                 </div>
               </div>
             </div>
 
-            {/* Contact Info */}
-            <div className="pb-3 border-b" style={{ borderColor: "rgba(139,79,109,0.15)" }}>
-              <label className="text-xs font-semibold mb-2 block" style={{ color: "#8B4F6D" }}>Contact Information</label>
+            <div className="pb-3 border-b" style={{ borderColor: "#222" }}>
+              <label className="text-xs font-semibold mb-2 block uppercase tracking-wide" style={{ color: "#C9A961" }}>Contact</label>
               <div className="space-y-3">
                 <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: "#6b6361" }}>Email Address</label>
-                  <input
-                    required
-                    type="email"
-                    placeholder="your@email.com"
-                    className="form-input text-sm w-full"
-                    value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  />
+                  <label className="text-xs mb-1 block" style={{ color: "#888" }}>Email</label>
+                  <input required type="email" placeholder="your@email.com" className={inputCls} style={inputStyle}
+                    value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
                 </div>
                 <div>
-                  <label className="text-xs font-medium mb-1 block" style={{ color: "#6b6361" }}>Phone / WhatsApp</label>
-                  <input
-                    required
-                    type="tel"
-                    placeholder="+251..."
-                    className="form-input text-sm w-full"
-                    value={form.phone}
-                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  />
+                  <label className="text-xs mb-1 block" style={{ color: "#888" }}>Phone / WhatsApp</label>
+                  <input required type="tel" placeholder="+251..." className={inputCls} style={inputStyle}
+                    value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
                 </div>
               </div>
             </div>
 
-            {/* Delivery Address */}
-            <div className="pb-3 border-b" style={{ borderColor: "rgba(139,79,109,0.15)" }}>
-              <label className="text-xs font-semibold mb-2 block" style={{ color: "#8B4F6D" }}>Delivery Address</label>
-              <AddressPicker
-                required
-                value={form.address}
-                onChange={(address) => setForm((f) => ({ ...f, address }))}
-              />
+            <div className="pb-3 border-b" style={{ borderColor: "#222" }}>
+              <label className="text-xs font-semibold mb-2 block uppercase tracking-wide" style={{ color: "#C9A961" }}>Delivery Address</label>
+              <AddressPicker required value={form.address}
+                onChange={(address) => setForm((f) => ({ ...f, address }))} />
             </div>
 
             {error && (
-              <p className="text-xs bg-red-50 border border-red-100 px-3 py-2" style={{ color: "#d9534f", background: "rgba(217,83,79,0.08)", borderColor: "rgba(217,83,79,0.2)" }}>
+              <p className="text-xs px-3 py-2 border"
+                style={{ color: "#f87171", background: "rgba(248,113,113,0.08)", borderColor: "rgba(248,113,113,0.2)" }}>
                 {error}
               </p>
             )}
 
-            {/* Chapa badge */}
-            <div className="flex items-center justify-center gap-2 py-2 border" style={{ borderColor: "rgba(139,79,109,0.15)", background: "#ede8e5" }}>
-              <svg className="w-4 h-4" style={{ color: "#8B4F6D" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <div className="flex items-center justify-center gap-2 py-2 border" style={{ borderColor: "#222", background: "#0d0d0d" }}>
+              <svg className="w-4 h-4" style={{ color: "#C9A961" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
-              <span className="text-xs font-medium" style={{ color: "#6b6361" }}>Secured by <span style={{ color: "#8B4F6D", fontWeight: "bold" }}>Chapa</span></span>
+              <span className="text-xs font-medium" style={{ color: "#888" }}>
+                Secured by <span style={{ color: "#C9A961", fontWeight: "bold" }}>Chapa</span>
+              </span>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary w-full py-3.5 text-base disabled:opacity-60"
-            >
+            <button type="submit" disabled={loading}
+              className="w-full py-3.5 text-sm font-bold uppercase tracking-widest transition-all hover:opacity-90 disabled:opacity-50"
+              style={{ background: "#C9A961", color: "#111" }}>
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                   </svg>
                   Redirecting to Chapa...
                 </span>
-              ) : (
-                "Pay Now"
-              )}
+              ) : "Pay Now"}
             </button>
           </form>
         </div>
+      </div>
       </div>
     </div>
   );

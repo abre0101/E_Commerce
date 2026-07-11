@@ -103,6 +103,74 @@ export const products = [
     rating: 4.6,
     reviewCount: 55,
   },
+  {
+    id: "7",
+    name: "HD Lace Closure Wig — Water Wave",
+    category: "Wigs",
+    price: 9800,
+    originalPrice: 11500,
+    images: [
+      "/asset/lace closure wig.png",
+    ],
+    description:
+      "5×5 HD lace closure wig with a natural water wave pattern. Pre-plucked, bleached knots, and glueless fit for everyday wear.",
+    lengths: ["16\"", "18\"", "20\"", "22\""],
+    inStock: true,
+    featured: true,
+    rating: 4.9,
+    reviewCount: 44,
+  },
+  {
+    id: "8",
+    name: "Yaki Straight Bundle Deal",
+    category: "Bundles",
+    price: 5200,
+    originalPrice: null,
+    images: [
+      "/asset/yaki straight.jfif",
+    ],
+    description:
+      "Natural yaki straight texture that mimics relaxed hair. Ideal for blending with natural or relaxed hairlines. Minimum shedding, long-lasting.",
+    lengths: ["12\"", "14\"", "16\"", "18\"", "20\""],
+    inStock: true,
+    featured: true,
+    rating: 4.8,
+    reviewCount: 33,
+  },
+  {
+    id: "9",
+    name: "Frontal Wig — Silky Straight",
+    category: "Wigs",
+    price: 13500,
+    originalPrice: 15000,
+    images: [
+      "/asset/frontal wig.avif",
+    ],
+    description:
+      "13×6 HD lace frontal wig. Super silky straight, 200% density. Natural hairline illusion with invisible knots. Ready to wear straight out of the box.",
+    lengths: ["18\"", "20\"", "22\"", "24\"", "26\""],
+    inStock: true,
+    featured: false,
+    rating: 5.0,
+    reviewCount: 71,
+  },
+  {
+    id: "10",
+    name: "Curly Bob Wig",
+    category: "Wigs",
+    price: 7600,
+    originalPrice: 8800,
+    images: [
+      "/asset/curly bob wig.jfif",
+    ],
+    description:
+      "Short curly bob wig with natural coil pattern. Lightweight cap, adjustable band. Perfect for a chic everyday look.",
+    lengths: ["8\"", "10\"", "12\""],
+    inStock: true,
+    featured: true,
+    rating: 4.7,
+    reviewCount: 58,
+  },
 ];
 
 export const reviews = [

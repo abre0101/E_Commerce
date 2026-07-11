@@ -27,52 +27,82 @@ export default function Login() {
     }, 300);
   };
 
+  const inputCls = "w-full px-4 py-3 text-sm border outline-none transition focus:border-yellow-500";
+  const inputStyle = { borderColor: "#333", color: "#fff", background: "transparent" };
+
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-5 py-16">
+    <div className="min-h-[80vh] flex items-center justify-center px-5 py-16" style={{ background: "#0d0d0d" }}>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <Link to="/" className="font-serif text-2xl font-bold text-brown-900">Yada Hair</Link>
-          <p className="text-brown-400 text-sm mt-1">Sign in to your account</p>
+          <Link to="/" className="font-serif text-2xl font-bold" style={{ color: "#fff" }}>
+            Yada<span style={{ color: "#C9A961" }}>Hair</span>
+          </Link>
+          <p className="text-sm mt-1" style={{ color: "#888" }}>Sign in to your account</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white border border-brown-100 p-8 space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          className="p-8 space-y-4 border"
+          style={{ background: "#111", borderColor: "rgba(201,169,97,0.15)" }}
+        >
           <div>
-            <label className="block text-xs font-medium text-brown-600 mb-1.5">Email</label>
+            <label className="block text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "#888" }}>
+              Email
+            </label>
             <input
               required
               type="email"
               autoComplete="email"
               placeholder="your@email.com"
-              className="form-input"
+              className={inputCls}
+              style={inputStyle}
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-brown-600 mb-1.5">Password</label>
+            <label className="block text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "#888" }}>
+              Password
+            </label>
             <input
               required
               type="password"
               autoComplete="current-password"
               placeholder="••••••••"
-              className="form-input"
+              className={inputCls}
+              style={inputStyle}
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
           </div>
 
           {error && (
-            <p className="text-xs text-red-500 bg-red-50 border border-red-100 px-3 py-2">{error}</p>
+            <p
+              className="text-xs px-3 py-2 border"
+              style={{ color: "#f87171", background: "rgba(248,113,113,0.08)", borderColor: "rgba(248,113,113,0.2)" }}
+            >
+              {error}
+            </p>
           )}
 
-          <button type="submit" disabled={loading} className="btn-primary w-full py-3 mt-2">
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3.5 mt-2 text-sm font-bold uppercase tracking-widest transition-all hover:opacity-90 disabled:opacity-50"
+            style={{ background: "#C9A961", color: "#111" }}
+          >
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
-        <p className="text-center text-sm text-brown-400 mt-5">
+        <p className="text-center text-sm mt-5" style={{ color: "#666" }}>
           Don't have an account?{" "}
-          <Link to="/register" state={{ from }} className="text-brown-800 font-semibold hover:underline">
+          <Link
+            to="/register"
+            state={{ from }}
+            className="font-semibold hover:underline"
+            style={{ color: "#C9A961" }}
+          >
             Create one
           </Link>
         </p>
