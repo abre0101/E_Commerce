@@ -39,9 +39,32 @@ export default function Cart() {
     setError("");
     setLoading(true);
 
-    // Simulate payment processing
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
+    // Save order to localStorage
+    const order = {
+      txRef:    `YADA-${Date.now()}`,
+      date:     new Date().toISOString(),
+      status:   "success",
+      total:    total(),
+      customer: {
+        firstName: form.firstName,
+        lastName:  form.lastName,
+        email:     form.email,
+        phone:     form.phone,
+        address:   form.address,
+      },
+      items: items.map((item) => ({
+        name:  item.product.name,
+        length: item.length,
+        qty:   item.qty,
+        price: item.product.price,
+      })),
+    };
+    const existing = JSON.parse(localStorage.getItem("yada_orders") || "[]");
+    localStorage.setItem("yada_orders", JSON.stringify([...existing, order]));
+
+    useCartStore.getState().clearCart();
     setLoading(false);
     setSuccess(true);
   };

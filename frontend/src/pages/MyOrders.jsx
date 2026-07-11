@@ -1,96 +1,107 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { IconPackage } from "../components/Icons";
-import api from "../services/api";
+import useAuthStore from "../store/useAuthStore";
 
-const STATUS_STYLES = {
-  pending:   "badge-orange",
-  confirmed: "badge-purple",
-  shipped:   "badge-blue",
-  delivered: "badge-green",
-  cancelled: "badge-red",
+const STATUS = {
+  success:    { bg: "rgba(52,211,153,0.15)",  color: "#059669", label: "Paid" },
+  processing: { bg: "rgba(96,165,250,0.15)",  color: "#2563eb", label: "Processing" },
+  shipped:    { bg: "rgba(201,169,97,0.18)",  color: "#b45309", label: "Shipped" },
+  delivered:  { bg: "rgba(52,211,153,0.15)",  color: "#059669", label: "Delivered" },
+  failed:     { bg: "rgba(239,68,68,0.12)",   color: "#dc2626", label: "Failed" },
+  pending:    { bg: "rgba(251,191,36,0.15)",  color: "#d97706", label: "Pending" },
 };
 
+function getOrders() {
+  try { return JSON.parse(localStorage.getItem("yada_orders") || "[]"); }
+  catch { return []; }
+}
+
 export default function MyOrders() {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const user = useAuthStore((s) => s.user);
 
-  useEffect(() => {
-    api.get("/orders/my")
-      .then((r) => setOrders(r.data))
-      .finally(() => setLoading(false));
-  }, []);
+  // filter orders that belong to this user by email
+  const orders = useMemo(() => {
+    const all = getOrders();
+    return [...all]
+      .reverse()
+      .filter((o) => o.customer?.email === user?.email);
+  }, [user]);
 
-  if (loading) return (
-    <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
-      {[1,2,3].map((i) => (
-        <div key={i} className="bg-white rounded-2xl border border-gray-100 p-5 space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="skeleton h-5 w-32 rounded" />
-            <div className="skeleton h-5 w-20 rounded-full" />
+  if (!orders.length) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0d0d0d" }}>
+        <div className="text-center px-5 py-20">
+          <div className="w-20 h-20 flex items-center justify-center mx-auto mb-5"
+            style={{ background: "rgba(201,169,97,0.1)" }}>
+            <svg className="w-10 h-10" style={{ color: "#C9A961" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
           </div>
-          <div className="skeleton h-12 w-full rounded-xl" />
+          <h2 className="font-serif text-2xl font-bold mb-3" style={{ color: "#fff" }}>No orders yet</h2>
+          <p className="text-sm mb-8" style={{ color: "#888" }}>Your completed orders will appear here.</p>
+          <Link to="/shop"
+            className="inline-block px-8 py-3.5 text-sm font-bold uppercase tracking-widest transition-all hover:opacity-90"
+            style={{ background: "#C9A961", color: "#111" }}>
+            Shop Now
+          </Link>
         </div>
-      ))}
-    </div>
-  );
-
-  if (!orders.length) return (
-    <div className="max-w-7xl mx-auto px-4 py-24 text-center">
-      <div className="w-20 h-20 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-5">
-        <IconPackage size={32} className="text-gray-400" />
       </div>
-      <h2 className="text-xl font-bold text-gray-800 mb-2">No orders yet</h2>
-      <p className="text-gray-500 text-sm mb-6">Start shopping to see your orders here.</p>
-      <Link to="/products" className="btn-primary inline-flex py-3 px-8">Browse Products</Link>
-    </div>
-  );
+    );
+  }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">
-        My Orders
-        <span className="text-sm font-normal text-gray-500 ml-2">({orders.length})</span>
-      </h1>
+    <div className="min-h-screen" style={{ background: "#0d0d0d" }}>
+      <div className="max-w-3xl mx-auto px-5 py-14">
+        <p className="text-xs font-bold uppercase tracking-[0.25em] mb-3" style={{ color: "#C9A961" }}>Account</p>
+        <h1 className="font-serif text-3xl font-bold mb-8" style={{ color: "#fff" }}>
+          My Orders <span className="text-base font-normal" style={{ color: "#888" }}>({orders.length})</span>
+        </h1>
 
-      <div className="space-y-4">
-        {orders.map((o) => (
-          <div key={o.id} className="bg-white rounded-2xl border border-gray-100 shadow-card hover:shadow-card-hover transition-shadow p-5">
-            {/* Order header */}
-            <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100">
-              <span className="font-bold text-gray-800 text-sm">#{o.id.slice(-8).toUpperCase()}</span>
-              <span className={`badge ${STATUS_STYLES[o.status] || "badge-gray"}`}>{o.status}</span>
-              <span className="ml-auto text-xs text-gray-400">
-                {new Date(o.created_at?.$date || o.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-              </span>
-            </div>
-
-            {/* Items */}
-            <div className="space-y-2.5 mb-4">
-              {o.items?.map((item, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <img src={item.image || "https://placehold.co/40x40"} alt={item.title}
-                    className="w-11 h-11 rounded-xl object-cover shrink-0" />
-                  <span className="flex-1 text-sm font-medium text-gray-700">{item.title}</span>
-                  <span className="text-xs text-gray-400">× {item.qty}</span>
-                  <span className="font-bold text-sm text-gray-900 shrink-0">
-                    ETB {(item.price * item.qty).toLocaleString()}
+        <div className="space-y-5">
+          {orders.map((o) => {
+            const st = STATUS[o.status] || STATUS.success;
+            return (
+              <div key={o.txRef} className="p-5 border" style={{ background: "#111", borderColor: "#222" }}>
+                {/* Header */}
+                <div className="flex items-center justify-between mb-4 pb-4 border-b" style={{ borderColor: "#1e1e1e" }}>
+                  <div>
+                    <p className="text-xs font-mono" style={{ color: "#666" }}>{o.txRef}</p>
+                    <p className="text-xs mt-0.5" style={{ color: "#888" }}>
+                      {o.date ? new Date(o.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "—"}
+                    </p>
+                  </div>
+                  <span className="text-xs font-bold px-3 py-1 rounded-full" style={{ background: st.bg, color: st.color }}>
+                    {st.label}
                   </span>
                 </div>
-              ))}
-            </div>
 
-            {/* Footer */}
-            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-              <span className="text-xs text-gray-500">
-                Payment: <span className="font-semibold text-gray-700">{o.payment_method?.replace(/_/g, " ")}</span>
-              </span>
-              <span className="font-black text-accent-500 text-base">
-                ETB {Number(o.total).toLocaleString()}
-              </span>
-            </div>
-          </div>
-        ))}
+                {/* Items */}
+                <div className="space-y-3 mb-4">
+                  {o.items?.map((item, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate" style={{ color: "#fff" }}>{item.name}</p>
+                        <p className="text-xs" style={{ color: "#666" }}>Length: {item.length} · Qty: {item.qty}</p>
+                      </div>
+                      <p className="text-sm font-bold shrink-0" style={{ color: "#C9A961" }}>
+                        ETB {(item.price * item.qty).toLocaleString()}
+                      </p>
+                    </div>
+                  ))}
+                  {(!o.items || o.items.length === 0) && (
+                    <p className="text-xs" style={{ color: "#666" }}>No item details available.</p>
+                  )}
+                </div>
+
+                {/* Footer */}
+                <div className="pt-4 flex items-center justify-between border-t" style={{ borderColor: "#1e1e1e" }}>
+                  <span className="text-xs" style={{ color: "#888" }}>Total</span>
+                  <span className="font-bold text-base" style={{ color: "#fff" }}>ETB {o.total?.toLocaleString()}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

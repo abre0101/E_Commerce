@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { products } from "../data/mockData";
+import useProductStore from "../store/useProductStore";
 import useCartStore from "../store/useCartStore";
 import useAuthStore from "../store/useAuthStore";
 import ProductCard from "../components/ProductCard";
 
 export default function ProductDetail() {
   const { id } = useParams();
-  const product = products.find((p) => p.id === id);
+  const getProducts = useProductStore((s) => s.getProducts);
+  const product = getProducts().find((p) => p.id === id);
   const addItem = useCartStore((s) => s.addItem);
   const user = useAuthStore((s) => s.user);
   const navigate = useNavigate();
@@ -145,7 +146,7 @@ export default function ProductDetail() {
       <div className="mt-20">
         <h2 className="font-serif text-2xl font-bold mb-6" style={{ color: "#fff" }}>You May Also Like</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-          {products.filter((p) => p.id !== id).slice(0, 4).map((p) => (
+          {getProducts().filter((p) => p.id !== id).slice(0, 4).map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>

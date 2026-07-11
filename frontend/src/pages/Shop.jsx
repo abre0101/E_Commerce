@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { products, categories } from "../data/mockData";
+import { categories } from "../data/mockData";
+import useProductStore from "../store/useProductStore";
 import ProductCard from "../components/ProductCard";
 
 export default function Shop() {
+  const getProducts = useProductStore((s) => s.getProducts);
   const [activeCategory, setActiveCategory] = useState("All");
 
+  const products = getProducts();
   const filtered =
     activeCategory === "All" ? products : products.filter((p) => p.category === activeCategory);
 

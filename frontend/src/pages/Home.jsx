@@ -1,9 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { products, reviews } from "../data/mockData";
-import ProductCard from "../components/ProductCard";
-
-const featured = products.filter((p) => p.featured);
+import { reviews } from "../data/mockData";
+import useProductStore from "../store/useProductStore";
 
 function Stars({ count = 5 }) {
   return (
@@ -116,6 +114,8 @@ function Hero() {
 
 // ── Home Page ────────────────────────────────────────────────────────────────
 export default function Home() {
+  const getProducts = useProductStore((s) => s.getProducts);
+  const featured = getProducts().filter((p) => p.featured);
   const [form, setForm] = useState({ name: "", phone: "", treatment: "", date: "", reminder: false });
   const [submitted, setSubmitted] = useState(false);
   const f = (field) => (e) => setForm((s) => ({ ...s, [field]: e.target.value }));

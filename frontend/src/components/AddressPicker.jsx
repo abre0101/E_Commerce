@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 
-// Uses OpenStreetMap Nominatim — completely free, no API key needed
 const NOMINATIM = "https://nominatim.openstreetmap.org/search";
 
 function useDebounce(value, delay) {
@@ -12,12 +11,10 @@ function useDebounce(value, delay) {
   return debounced;
 }
 
-export default function AddressPicker({
-  value,
-  onChange,
-  required,
-  placeholder = "Search your delivery address",
-}) {
+const inputCls = "w-full px-4 py-3 text-sm border outline-none transition focus:border-yellow-500";
+const inputStyle = { borderColor: "#333", color: "#fff", background: "transparent" };
+
+export default function AddressPicker({ value, onChange, required, placeholder = "Search your delivery address" }) {
   const [query, setQuery] = useState(value || "");
   const [suggestions, setSuggestions] = useState([]);
   const [open, setOpen] = useState(false);
@@ -26,42 +23,26 @@ export default function AddressPicker({
   const containerRef = useRef(null);
   const debouncedQuery = useDebounce(query, 400);
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e) => {
-      if (containerRef.current && !containerRef.current.contains(e.target)) {
-        setOpen(false);
-      }
+      if (containerRef.current && !containerRef.current.contains(e.target)) setOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Fetch suggestions from Nominatim
   useEffect(() => {
-    if (selected || debouncedQuery.length < 3) {
-      setSuggestions([]);
-      return;
-    }
-
+    if (selected || debouncedQuery.length < 3) { setSuggestions([]); return; }
     setLoading(true);
     const controller = new AbortController();
-
     fetch(
       `${NOMINATIM}?q=${encodeURIComponent(debouncedQuery)}&countrycodes=et&format=json&addressdetails=1&limit=6`,
-      {
-        signal: controller.signal,
-        headers: { "Accept-Language": "en" },
-      }
+      { signal: controller.signal, headers: { "Accept-Language": "en" } }
     )
       .then((r) => r.json())
-      .then((data) => {
-        setSuggestions(data);
-        setOpen(data.length > 0);
-      })
+      .then((data) => { setSuggestions(data); setOpen(data.length > 0); })
       .catch(() => {})
       .finally(() => setLoading(false));
-
     return () => controller.abort();
   }, [debouncedQuery, selected]);
 
@@ -71,10 +52,7 @@ export default function AddressPicker({
     setSelected(true);
     setOpen(false);
     setSuggestions([]);
-    onChange(address, {
-      lat: parseFloat(item.lat),
-      lng: parseFloat(item.lon),
-    });
+    onChange(address, { lat: parseFloat(item.lat), lng: parseFloat(item.lon) });
   };
 
   const handleChange = (e) => {
@@ -92,36 +70,31 @@ export default function AddressPicker({
 
   return (
     <div ref={containerRef} className="relative">
-      {/* Input */}
       <div className="relative">
-        {/* Pin icon */}
         <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-          <svg className="w-4 h-4 text-sand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <svg className="w-4 h-4" style={{ color: "#666" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
         </div>
-
         <input
           required={required}
           placeholder={placeholder}
-          className="form-input pl-9 pr-9"
+          className={inputCls}
+          style={{ ...inputStyle, paddingLeft: "2.5rem", paddingRight: "2.5rem" }}
           value={query}
           onChange={handleChange}
           onFocus={() => suggestions.length > 0 && setOpen(true)}
           autoComplete="off"
         />
-
-        {/* Right: spinner or clear */}
         <div className="absolute right-3 top-1/2 -translate-y-1/2">
           {loading ? (
-            <svg className="w-4 h-4 text-sand-400 animate-spin" fill="none" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 animate-spin" style={{ color: "#666" }} fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
             </svg>
           ) : query ? (
-            <button type="button" onClick={handleClear}
-              className="text-sand-300 hover:text-sand-600 transition-colors">
+            <button type="button" onClick={handleClear} style={{ color: "#888" }}>
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -130,17 +103,19 @@ export default function AddressPicker({
         </div>
       </div>
 
-      {/* Dropdown */}
       {open && suggestions.length > 0 && (
-        <ul className="absolute z-50 w-full mt-1 bg-white rounded-xl border border-sand-200 shadow-float overflow-hidden animate-fade-in">
+        <ul className="absolute z-50 w-full mt-1 overflow-hidden" style={{ background: "#1a1a1a", border: "1px solid #333" }}>
           {suggestions.map((item) => (
             <li key={item.place_id}>
               <button
                 type="button"
                 onClick={() => handleSelect(item)}
-                className="w-full text-left px-4 py-3 text-sm text-espresso hover:bg-sand-50 transition-colors flex items-start gap-3 border-b border-sand-50 last:border-0"
+                className="w-full text-left flex items-start gap-3 px-4 py-3 text-sm transition-colors"
+                style={{ color: "#ddd", borderBottom: "1px solid #222" }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(201,169,97,0.1)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
               >
-                <svg className="w-4 h-4 text-sand-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                <svg className="w-4 h-4 shrink-0 mt-0.5" style={{ color: "#C9A961" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
@@ -148,9 +123,7 @@ export default function AddressPicker({
               </button>
             </li>
           ))}
-          <li className="px-4 py-2 text-[10px] text-sand-300 text-right">
-            © OpenStreetMap contributors
-          </li>
+          <li className="px-4 py-1.5 text-[10px] text-right" style={{ color: "#555" }}>© OpenStreetMap contributors</li>
         </ul>
       )}
     </div>

@@ -14,6 +14,10 @@ import FAQ from "./pages/FAQ";
 import Terms from "./pages/Terms";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import RequireAuth from "./components/RequireAuth";
+import Profile from "./pages/Profile";
+import MyOrders from "./pages/MyOrders";
+import Wishlist from "./pages/Wishlist";
+import Messages from "./pages/Messages";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -69,6 +73,10 @@ export default function App() {
       {/* ── Protected (must be logged in) ── */}
       <Route path="/cart" element={<StoreLayout><RequireAuth><Cart /></RequireAuth></StoreLayout>} />
       <Route path="/payment/verify" element={<StoreLayout><RequireAuth><PaymentVerify /></RequireAuth></StoreLayout>} />
+      <Route path="/profile" element={<StoreLayout><RequireAuth><Profile /></RequireAuth></StoreLayout>} />
+      <Route path="/orders" element={<StoreLayout><RequireAuth><MyOrders /></RequireAuth></StoreLayout>} />
+      <Route path="/wishlist" element={<StoreLayout><RequireAuth><Wishlist /></RequireAuth></StoreLayout>} />
+      <Route path="/messages" element={<StoreLayout><RequireAuth><Messages /></RequireAuth></StoreLayout>} />
 
       {/* ── Admin (own sidebar layout, no store chrome) ── */}
       <Route path="/admin/login" element={<AdminLogin />} />

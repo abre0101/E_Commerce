@@ -212,6 +212,20 @@ export default function Navbar() {
                         </div>
                       </div>
                     </div>
+                    {[
+                      { to: "/profile",  label: "My Profile" },
+                      { to: "/orders",   label: "My Orders" },
+                      { to: "/wishlist", label: "Wishlist" },
+                      { to: "/messages", label: "Messages" },
+                    ].map((item) => (
+                      <Link key={item.to} to={item.to} onClick={() => setDropOpen(false)}
+                        className="w-full text-left flex items-center px-4 py-3 text-sm transition-colors font-medium border-b"
+                        style={{ color: "#2a2220", borderColor: "rgba(201,169,97,0.1)" }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(201,169,97,0.08)"; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; }}>
+                        {item.label}
+                      </Link>
+                    ))}
                     <button onClick={handleLogout}
                       className="w-full text-left flex items-center gap-2 px-4 py-3 text-sm transition-colors font-medium" style={{ color: "#d9534f" }} onMouseEnter={(e) => {
                         e.currentTarget.style.backgroundColor = "rgba(217,83,79,0.08)";
@@ -307,15 +321,28 @@ export default function Navbar() {
             )}
             <div className="pt-3 border-t mt-2" style={{ borderColor: "rgba(201,169,97,0.15)" }}>
               {user ? (
-                <div className="flex items-center justify-between px-4 py-3 rounded-xl" style={{ background: "rgba(201,169,97,0.12)" }}>
-                  <div className="flex items-center gap-3">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-3 px-4 py-3 rounded-xl mb-1" style={{ background: "rgba(201,169,97,0.12)" }}>
                     <div className="w-8 h-8 rounded-lg text-white flex items-center justify-center text-xs font-bold" style={{ background: "#8B4F6D" }}>
                       {user.name[0].toUpperCase()}
                     </div>
-                    <span className="text-sm font-medium" style={{ color: "#ffffff" }}>{user.name}</span>
+                    <span className="text-sm font-medium flex-1" style={{ color: "#ffffff" }}>{user.name}</span>
                   </div>
+                  {[
+                    { to: "/profile",  label: "My Profile" },
+                    { to: "/orders",   label: "My Orders" },
+                    { to: "/wishlist", label: "Wishlist" },
+                    { to: "/messages", label: "Messages" },
+                  ].map((item) => (
+                    <Link key={item.to} to={item.to} onClick={() => setMenuOpen(false)}
+                      className="block py-2.5 px-4 text-sm font-medium rounded-xl transition-all"
+                      style={{ color: "#C9A961" }}>
+                      {item.label}
+                    </Link>
+                  ))}
                   <button onClick={() => { handleLogout(); setMenuOpen(false); }}
-                    className="text-xs font-semibold" style={{ color: "#fca5a5" }}>
+                    className="w-full text-left py-2.5 px-4 text-sm font-semibold rounded-xl"
+                    style={{ color: "#fca5a5" }}>
                     Sign Out
                   </button>
                 </div>
@@ -329,7 +356,10 @@ export default function Navbar() {
                     Sign In
                   </Link>
                   <Link to="/register" onClick={() => setMenuOpen(false)}
-                    className="flex-1 text-center btn-primary py-2.5 text-sm rounded-xl font-semibold">Register</Link>
+                    className="flex-1 text-center py-2.5 text-sm rounded-xl font-semibold"
+                    style={{ background: "#C9A961", color: "#111" }}>
+                    Register
+                  </Link>
                 </div>
               )}
             </div>

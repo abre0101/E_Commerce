@@ -1,120 +1,126 @@
-import { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
-import { IconMessage, IconSend } from "../components/Icons";
-import api from "../services/api";
+import { useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 
+const MSGS_KEY = "yada_messages";
+
+function loadMessages() {
+  try { return JSON.parse(localStorage.getItem(MSGS_KEY) || "[]"); }
+  catch { return []; }
+}
+
+function saveMessages(msgs) {
+  localStorage.setItem(MSGS_KEY, JSON.stringify(msgs));
+}
+
+const SUPPORT_USER = "Yada Hair Support";
+
 export default function Messages() {
-  const { userId } = useParams();
-  const { user } = useAuthStore();
-  const [inbox, setInbox] = useState([]);
-  const [messages, setMessages] = useState([]);
+  const user = useAuthStore((s) => s.user);
+  const [messages, setMessages] = useState(loadMessages);
   const [text, setText] = useState("");
-  const [activeUser, setActiveUser] = useState(userId || null);
-  const bottom = useRef(null);
 
-  useEffect(() => { api.get("/messages/inbox").then((r) => setInbox(r.data)); }, []);
+  const myMessages = messages.filter(
+    (m) => m.userId === user?.id || m.sender === SUPPORT_USER
+  );
 
-  useEffect(() => {
-    if (activeUser) api.get(`/messages/conversation/${activeUser}`).then((r) => setMessages(r.data));
-  }, [activeUser]);
-
-  useEffect(() => { bottom.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
-
-  const send = async (e) => {
+  const send = (e) => {
     e.preventDefault();
     if (!text.trim()) return;
-    await api.post("/messages/send", { receiver_id: activeUser, text });
+    const msg = {
+      id:     Date.now(),
+      userId: user?.id,
+      sender: user?.name,
+      text:   text.trim(),
+      ts:     new Date().toISOString(),
+      fromSupport: false,
+    };
+    const updated = [...messages, msg];
+    saveMessages(updated);
+    setMessages(updated);
     setText("");
-    const r = await api.get(`/messages/conversation/${activeUser}`);
-    setMessages(r.data);
+
+    // Auto-reply after 800ms
+    setTimeout(() => {
+      const reply = {
+        id:          Date.now() + 1,
+        userId:      user?.id,
+        sender:      SUPPORT_USER,
+        text:        "Thanks for reaching out! We'll get back to you shortly. For urgent inquiries please call +251 91 123 4567.",
+        ts:          new Date().toISOString(),
+        fromSupport: true,
+      };
+      const withReply = [...updated, reply];
+      saveMessages(withReply);
+      setMessages(withReply);
+    }, 800);
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold text-gray-900 mb-5">Messages</h1>
+    <div className="min-h-screen" style={{ background: "#0d0d0d" }}>
+      <div className="max-w-2xl mx-auto px-5 py-14">
+        <p className="text-xs font-bold uppercase tracking-[0.25em] mb-3" style={{ color: "#C9A961" }}>Account</p>
+        <h1 className="font-serif text-3xl font-bold mb-8" style={{ color: "#fff" }}>Messages</h1>
 
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-card overflow-hidden flex h-[600px]">
-        {/* Inbox sidebar */}
-        <div className="w-64 border-r border-gray-100 shrink-0 flex flex-col">
-          <div className="px-4 py-3 border-b border-gray-100">
-            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Conversations</p>
+        <div className="border flex flex-col" style={{ background: "#111", borderColor: "#222", height: 520 }}>
+          {/* Header */}
+          <div className="flex items-center gap-3 px-5 py-4 border-b" style={{ borderColor: "#222" }}>
+            <div className="w-9 h-9 flex items-center justify-center text-black font-bold text-sm"
+              style={{ background: "#C9A961" }}>Y</div>
+            <div>
+              <p className="font-semibold text-sm" style={{ color: "#fff" }}>Yada Hair Support</p>
+              <p className="text-xs" style={{ color: "#888" }}>Usually replies within a few hours</p>
+            </div>
           </div>
-          <div className="flex-1 overflow-y-auto">
-            {inbox.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-gray-400 text-center px-4">
-                <IconMessage size={28} className="mb-2 opacity-50" />
-                <p className="text-sm">No conversations yet</p>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
+            {myMessages.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full text-center">
+                <svg className="w-10 h-10 mb-3 opacity-30" style={{ color: "#C9A961" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                <p className="text-sm font-semibold" style={{ color: "#fff" }}>No messages yet</p>
+                <p className="text-xs mt-1" style={{ color: "#888" }}>Send us a message and we'll get back to you.</p>
               </div>
             ) : (
-              inbox.map((c) => (
-                <button key={c.with_user} onClick={() => setActiveUser(c.with_user)}
-                  className={`w-full flex items-center gap-3 px-4 py-3.5 border-b border-gray-50 text-left transition-colors ${
-                    activeUser === c.with_user
-                      ? "bg-gray-50 border-l-2 border-l-accent-500"
-                      : "hover:bg-gray-50"
-                  }`}>
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-500 to-brand text-white flex items-center justify-center font-bold text-sm shrink-0">
-                    {c.with_user?.[0]?.toUpperCase()}
+              myMessages.map((m) => (
+                <div key={m.id} className={`flex ${m.fromSupport ? "justify-start" : "justify-end"}`}>
+                  <div className="max-w-[70%] px-4 py-2.5 text-sm leading-relaxed"
+                    style={{
+                      background:   m.fromSupport ? "#1e1e1e" : "#C9A961",
+                      color:        m.fromSupport ? "#ddd"    : "#111",
+                      borderRadius: m.fromSupport ? "0 16px 16px 16px" : "16px 0 16px 16px",
+                    }}>
+                    {m.fromSupport && (
+                      <p className="text-[10px] font-bold mb-1 uppercase tracking-wide" style={{ color: "#C9A961" }}>
+                        {SUPPORT_USER}
+                      </p>
+                    )}
+                    {m.text}
+                    <p className="text-[10px] mt-1 opacity-60">
+                      {new Date(m.ts).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
+                    </p>
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-gray-800 truncate">{c.with_user}</p>
-                    <p className="text-xs text-gray-400 truncate">{c.last_message?.text}</p>
-                  </div>
-                </button>
+                </div>
               ))
             )}
           </div>
-        </div>
 
-        {/* Chat area */}
-        <div className="flex-1 flex flex-col">
-          {!activeUser ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-gray-400">
-              <IconMessage size={40} className="mb-3 opacity-30" />
-              <p className="font-medium text-gray-500">Select a conversation</p>
-              <p className="text-sm mt-1">Choose from the left to start messaging</p>
-            </div>
-          ) : (
-            <>
-              {/* Chat header */}
-              <div className="px-5 py-3.5 border-b border-gray-100 bg-gray-50/50">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-brand text-white flex items-center justify-center font-bold text-sm">
-                    {activeUser?.[0]?.toUpperCase()}
-                  </div>
-                  <p className="font-semibold text-sm text-gray-800">{activeUser}</p>
-                </div>
-              </div>
-
-              {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                {messages.map((m) => (
-                  <div key={m.id} className={`flex ${m.sender_id === user?.id ? "justify-end" : "justify-start"}`}>
-                    <div className={`max-w-[65%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
-                      m.sender_id === user?.id
-                        ? "bg-[#1a1a2e] text-white rounded-br-md"
-                        : "bg-gray-100 text-gray-800 rounded-bl-md"
-                    }`}>
-                      {m.text}
-                    </div>
-                  </div>
-                ))}
-                <div ref={bottom} />
-              </div>
-
-              {/* Input */}
-              <form onSubmit={send} className="border-t border-gray-100 p-3 flex gap-2.5 bg-gray-50/50">
-                <input value={text} onChange={(e) => setText(e.target.value)}
-                  placeholder="Type a message..."
-                  className="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-gray-300 transition-colors" />
-                <button type="submit"
-                  className="w-10 h-10 bg-accent-500 hover:bg-accent-600 text-white rounded-xl flex items-center justify-center shrink-0 transition-colors active:scale-95">
-                  <IconSend size={15} />
-                </button>
-              </form>
-            </>
-          )}
+          {/* Input */}
+          <form onSubmit={send} className="flex gap-3 p-4 border-t" style={{ borderColor: "#222" }}>
+            <input
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Type a message..."
+              className="flex-1 px-4 py-2.5 text-sm border outline-none transition focus:border-yellow-500"
+              style={{ background: "transparent", borderColor: "#333", color: "#fff" }}
+            />
+            <button type="submit"
+              className="px-5 py-2.5 text-sm font-bold uppercase tracking-wider transition-all hover:opacity-90"
+              style={{ background: "#C9A961", color: "#111" }}>
+              Send
+            </button>
+          </form>
         </div>
       </div>
     </div>

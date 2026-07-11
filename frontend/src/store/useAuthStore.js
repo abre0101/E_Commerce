@@ -62,6 +62,19 @@ const useAuthStore = create((set) => ({
     localStorage.removeItem(SESSION_KEY);
     set({ user: null });
   },
+
+  updateUser(updates) {
+    const users = loadUsers();
+    const current = get().user;
+    if (!current) return;
+    const updated = users.map((u) =>
+      u.id === current.id ? { ...u, ...updates } : u
+    );
+    saveUsers(updated);
+    const newSession = { ...current, ...updates };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(newSession));
+    set({ user: newSession });
+  },
 }));
 
 export default useAuthStore;

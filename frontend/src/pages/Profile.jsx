@@ -1,119 +1,159 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { IconEdit, IconMapPin, IconPhone, IconUser } from "../components/Icons";
+import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import api from "../services/api";
 import useAuthStore from "../store/useAuthStore";
+import AddressPicker from "../components/AddressPicker";
+
+const inputCls = "w-full px-4 py-3 text-sm border outline-none transition focus:border-yellow-500";
+const inputStyle = { borderColor: "#333", color: "#fff", background: "transparent" };
 
 export default function Profile() {
-  const { user, updateUser } = useAuthStore();
+  const { user, updateUser, logout } = useAuthStore();
   const navigate = useNavigate();
+
   const [form, setForm] = useState({
-    name: user?.name || "",
-    phone: user?.phone || "",
-    location: user?.location || "",
+    firstName: user?.firstName || "",
+    lastName:  user?.lastName  || "",
+    phone:     user?.phone     || "",
+    address:   user?.address   || "",
   });
   const [loading, setLoading] = useState(false);
+  const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" });
+  const [pwError, setPwError] = useState("");
 
-  const handleSubmit = async (e) => {
+  const set = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
+
+  const handleSave = (e) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      const res = await api.put("/auth/profile", form);
-      updateUser(res.data);
-      toast.success("Profile updated");
-    } catch { toast.error("Update failed"); }
-    finally { setLoading(false); }
-  };
-
-  const becomeSeller = async () => {
-    try {
-      await api.post("/sellers/become-seller", {
-        shop_name: `${user.name}'s Shop`,
-        shop_location: form.location,
+    setTimeout(() => {
+      updateUser({
+        firstName: form.firstName,
+        lastName:  form.lastName,
+        name:      `${form.firstName} ${form.lastName}`,
+        phone:     form.phone,
+        address:   form.address,
       });
-      updateUser({ role: "seller" });
-      toast.success("You're now a seller!");
-      navigate("/seller/dashboard");
-    } catch { toast.error("Failed"); }
+      toast.success("Profile updated");
+      setLoading(false);
+    }, 300);
   };
 
-  const ROLE_BADGE = {
-    admin:  "badge-purple",
-    seller: "badge-orange",
-    buyer:  "badge-gray",
+  const handlePassword = (e) => {
+    e.preventDefault();
+    setPwError("");
+    if (pwForm.next.length < 6) { setPwError("New password must be at least 6 characters."); return; }
+    if (pwForm.next !== pwForm.confirm) { setPwError("Passwords do not match."); return; }
+    const hash = btoa(unescape(encodeURIComponent(pwForm.current + "_yada_salt")));
+    const users = JSON.parse(localStorage.getItem("yada_users") || "[]");
+    const me = users.find((u) => u.id === user?.id);
+    if (!me || me.passwordHash !== hash) { setPwError("Current password is incorrect."); return; }
+    updateUser({ passwordHash: btoa(unescape(encodeURIComponent(pwForm.next + "_yada_salt"))) });
+    setPwForm({ current: "", next: "", confirm: "" });
+    toast.success("Password changed");
   };
+
+  const handleLogout = () => { logout(); navigate("/"); };
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">My Profile</h1>
+    <div className="min-h-screen" style={{ background: "#0d0d0d" }}>
+      <div className="max-w-2xl mx-auto px-5 py-14">
+        <p className="text-xs font-bold uppercase tracking-[0.25em] mb-3" style={{ color: "#C9A961" }}>
+          Account
+        </p>
+        <h1 className="font-serif text-3xl font-bold mb-8" style={{ color: "#fff" }}>My Profile</h1>
 
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-card overflow-hidden">
-        {/* Profile header */}
-        <div className="bg-gradient-to-r from-[#1a1a2e] to-[#16213e] px-6 py-6">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-400 to-accent-600 flex items-center justify-center text-2xl font-black text-white shrink-0">
-              {user?.name?.[0]?.toUpperCase()}
-            </div>
-            <div>
-              <p className="font-bold text-lg text-white">{user?.name}</p>
-              <p className="text-sm text-gray-400">{user?.email}</p>
-              <span className={`badge mt-1.5 ${ROLE_BADGE[user?.role] || "badge-gray"}`}>
-                {user?.role}
-              </span>
-            </div>
+        {/* Avatar + meta */}
+        <div className="flex items-center gap-5 mb-10 p-6 border" style={{ background: "#111", borderColor: "#222" }}>
+          <div className="w-16 h-16 flex items-center justify-center text-2xl font-bold text-black rounded-full shrink-0"
+            style={{ background: "#C9A961" }}>
+            {user?.name?.[0]?.toUpperCase()}
           </div>
-        </div>
-
-        {/* Form */}
-        <div className="p-6">
-          <div className="flex items-center gap-2 mb-5">
-            <IconEdit size={16} className="text-gray-500" />
-            <h2 className="font-semibold text-gray-800">Edit Information</h2>
+          <div>
+            <p className="font-bold text-lg" style={{ color: "#fff" }}>{user?.name}</p>
+            <p className="text-sm" style={{ color: "#888" }}>{user?.email}</p>
           </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Full Name</label>
-              <div className="relative">
-                <IconUser size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="form-input pl-10" placeholder="Your name" />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Phone</label>
-              <div className="relative">
-                <IconPhone size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  className="form-input pl-10" placeholder="+251 9xx xxx xxx" />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Location</label>
-              <div className="relative">
-                <IconMapPin size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })}
-                  className="form-input pl-10" placeholder="e.g. Addis Ababa" />
-              </div>
-            </div>
-            <button type="submit" disabled={loading} className="btn-primary py-2.5 px-6">
-              {loading ? "Saving..." : "Save Changes"}
+          <div className="ml-auto flex gap-3">
+            <Link to="/cart"
+              className="text-xs font-semibold px-4 py-2 border transition-all"
+              style={{ borderColor: "#C9A961", color: "#C9A961" }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "#C9A961"; e.currentTarget.style.color = "#111"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#C9A961"; }}>
+              View Cart
+            </Link>
+            <button onClick={handleLogout}
+              className="text-xs font-semibold px-4 py-2 border transition-all"
+              style={{ borderColor: "#f87171", color: "#f87171" }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "#f87171"; e.currentTarget.style.color = "#fff"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#f87171"; }}>
+              Sign Out
             </button>
-          </form>
-
-          {user?.role === "buyer" && (
-            <div className="mt-6 pt-6 border-t border-gray-100">
-              <div className="bg-gradient-to-r from-accent-50 to-orange-50 rounded-xl p-4">
-                <p className="font-semibold text-gray-800 mb-1">Become a Seller</p>
-                <p className="text-sm text-gray-500 mb-3">Start selling on Vibey World Market and reach thousands of buyers.</p>
-                <button onClick={becomeSeller} className="btn-accent py-2 px-5">
-                  Start Selling →
-                </button>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
+
+        {/* Edit form */}
+        <form onSubmit={handleSave} className="p-6 space-y-4 border mb-6" style={{ background: "#111", borderColor: "#222" }}>
+          <h2 className="font-semibold text-sm uppercase tracking-wider mb-2" style={{ color: "#C9A961" }}>
+            Personal Information
+          </h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "#888" }}>First Name</label>
+              <input required placeholder="First name" className={inputCls} style={inputStyle}
+                value={form.firstName} onChange={set("firstName")} />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "#888" }}>Last Name</label>
+              <input required placeholder="Last name" className={inputCls} style={inputStyle}
+                value={form.lastName} onChange={set("lastName")} />
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "#888" }}>Phone / WhatsApp</label>
+            <input type="tel" placeholder="+251..." className={inputCls} style={inputStyle}
+              value={form.phone} onChange={set("phone")} />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "#888" }}>Delivery Address</label>
+            <AddressPicker value={form.address}
+              onChange={(address) => setForm((f) => ({ ...f, address }))} />
+          </div>
+          <button type="submit" disabled={loading}
+            className="px-8 py-3 text-sm font-bold uppercase tracking-widest transition-all hover:opacity-90 disabled:opacity-50"
+            style={{ background: "#C9A961", color: "#111" }}>
+            {loading ? "Saving..." : "Save Changes"}
+          </button>
+        </form>
+
+        {/* Change password */}
+        <form onSubmit={handlePassword} className="p-6 space-y-4 border" style={{ background: "#111", borderColor: "#222" }}>
+          <h2 className="font-semibold text-sm uppercase tracking-wider mb-2" style={{ color: "#C9A961" }}>
+            Change Password
+          </h2>
+          {[
+            ["current", "Current Password"],
+            ["next",    "New Password"],
+            ["confirm", "Confirm New Password"],
+          ].map(([field, label]) => (
+            <div key={field}>
+              <label className="block text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "#888" }}>{label}</label>
+              <input required type="password" placeholder="••••••••" className={inputCls} style={inputStyle}
+                value={pwForm[field]}
+                onChange={(e) => setPwForm((f) => ({ ...f, [field]: e.target.value }))} />
+            </div>
+          ))}
+          {pwError && (
+            <p className="text-xs px-3 py-2 border"
+              style={{ color: "#f87171", background: "rgba(248,113,113,0.08)", borderColor: "rgba(248,113,113,0.2)" }}>
+              {pwError}
+            </p>
+          )}
+          <button type="submit"
+            className="px-8 py-3 text-sm font-bold uppercase tracking-widest transition-all hover:opacity-90"
+            style={{ background: "#C9A961", color: "#111" }}>
+            Update Password
+          </button>
+        </form>
       </div>
     </div>
   );
